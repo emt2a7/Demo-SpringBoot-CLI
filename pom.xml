@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>Demo-SpringBoot-CLI</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <!-- Maven 不允許在 parent 的 version 使用 property，因此此處使用 literal 以確保可建置；其他依賴維持 properties 管理 -->
+        <version>4.0.3</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <name>Demo-SpringBoot</name>
+    <description>示範用的 Spring Boot 專案（依據專案規範產生之 pom.xml）</description>
+
+    <properties>
+        <!-- Java / Build -->
+        <java.version>25</java.version>
+
+        <!-- Spring Boot / BOM versions (single-truth) -->
+        <spring-boot.version>4.0.3</spring-boot.version>
+        <spring-ai-bom.version>1.1.0</spring-ai-bom.version>
+
+        <!-- Tooling / Plugin Versions (single truth) -->
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <spring-boot-maven-plugin.version>4.0.3</spring-boot-maven-plugin.version>
+
+        <!-- Library versions (single-truth source) -->
+        <!-- Lombok: 最低 1.18.42，與 JDK25 相容 -->
+        <lombok.version>1.18.42</lombok.version>
+
+        <!-- 按專案規範要求的最低版本 -->
+        <commons-lang3.version>3.19.0</commons-lang3.version>
+        <commons-io.version>2.19.0</commons-io.version>
+        <commons-compress.version>1.28.0</commons-compress.version>
+
+        <!-- commons-cli 與 commons-email 版本由 properties 管理，遵循最低版本要求 -->
+        <commons-cli.version>1.11.0</commons-cli.version>
+        <commons-email.version>1.6.0</commons-email.version>
+
+        <!-- Test / Surefire -->
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+
+        <!-- Encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <start-class>org.example.Main</start-class>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring AI BOM: 鎖定至 1.1.0，由 BOM 管理 Spring AI 模組版本 -->
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- Spring Boot Starter: 包含核心功能，且由 Spring Boot 管理版本 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Test (exclude JUnit Vintage) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- NOTE: Jackson 由 Spring Boot 管理版本；若需特殊版本或安全性回報，請在 properties 中新增版本並小心處理與 Spring Boot 的相容性 -->
+
+        <!-- Lombok (compile-time / IDE annotation processing 已在 plugin 中設定) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Spring AI Starter: Google GenAI 模組 (其實就是指 Gemini) -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-google-genai</artifactId>
+        </dependency>
+
+        <!-- Spring AI Starter: Chat Memory 模組 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-chat-memory</artifactId>
+        </dependency>
+
+        <!-- Spring AI Starter: Google GenAI Embedding 向量模組 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-google-genai-embedding</artifactId>
+        </dependency>
+
+        <!-- Spring AI Starter: Vector Store 模組 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-vector-store</artifactId>
+        </dependency>
+
+        <!-- Spring AI Starter: Advisors Vector Store 模組 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-advisors-vector-store</artifactId>
+        </dependency>
+
+        <!-- Spring AI Starter: PDF Document Reader 模組 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-pdf-document-reader</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Starter JDBC 與 PostgreSQL Driver，為 pgvector 做準備 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Starter Mail，提供郵件發送功能，常用於通知或報告生成等場景 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!-- PostgreSQL JDBC Driver，pgvector 需要 PostgreSQL 作為向量資料庫，且此處 scope 設為 runtime 因為在開發階段可能使用 H2 或其他資料庫 -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Spring AI Starter: pgvector 向量資料庫模組 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-pgvector-store</artifactId>
+        </dependency>
+
+        <!-- Spring AI Starter: Tika Document Reader 模組 (讓 AI 讀懂 Word / Excel / PDF，但不支援 Google 雲端文件) -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-tika-document-reader</artifactId>
+        </dependency>
+
+        <!-- Apache Commons Lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <!-- Apache Commons IO -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+
+        <!-- Apache Commons Compress -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${commons-compress.version}</version>
+        </dependency>
+
+        <!-- Apache Commons CLI -->
+        <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>${commons-cli.version}</version>
+        </dependency>
+
+        <!-- NOTE: 若需要其他第三方套件，請遵守 properties 中管理版本的單一真理來源原則 -->
+        <!-- NOTE: 若未來需引入 Spring AI 模組 (例如 spring-ai-chat)，請勿在此指定 <version>， BOM（spring-ai-bom 1.1.0）會負責管理版本。 -->
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <profileActive>dev</profileActive>
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <filtering>true</filtering>
+                        <directory>src/main/resources</directory>
+                        <excludes>
+                            <exclude>application-prod.yml</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profileActive>prod</profileActive>
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <filtering>true</filtering>
+                        <directory>src/main/resources</directory>
+                        <!-- 在 prod profile 中排除 application-dev.yml，確保生產環境不會誤用開發環境的設定 -->
+                        <excludes>
+                            <exclude>application-dev.yml</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <!-- Compiler plugin: 保留 -parameters 與 -proc:full，並註冊 lombok 作為 annotation processor -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                        <arg>-proc:full</arg>
+                    </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <!-- Spring Boot plugin: 包含 repackage goal 以產生 Fat Jar -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- GraalVM Native Image plugin: 預留位置，實際使用時需根據專案需求進行配置 -->
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>${start-class}</mainClass>
+                    <imageName>${project.artifactId}</imageName>
+                    <buildArgs>
+                        <buildArg>--no-fallback</buildArg>
+                    </buildArgs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build-native</id>
+                        <goals>
+                            <goal>compile-no-fork</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Surefire plugin: 確保使用 JUnit Platform (JUnit Jupiter) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <useModulePath>false</useModulePath>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

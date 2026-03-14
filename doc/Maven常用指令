@@ -1,0 +1,10 @@
+
+# [正式環境] 更新 Maven & 打包 Prod fat jar
+mvn clean package -Pprod -DskipTests -U > build-error.log 2>&1
+
+# [開發環境] 更新 Maven & 打包 Dev fat jar
+mvn clean package -Pdev -DskipTests -U > build-error.log 2>&1
+
+# 使用 inspector 測試 MCP Server Tools (類似 Postman 功用)
+npx @modelcontextprotocol/inspector java -jar 'D:/idea-worksapce/temp/Demo-SpringBoot-1.0-SNAPSHOT.jar'
+

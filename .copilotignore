@@ -1,0 +1,15 @@
+# IDE 與本地配置
+.idea/
+*.iml
+Scratches and Consoles/
+
+# Maven 建置輸出 (最重要，避免 AI 讀取大量二進位與編譯檔)
+target/
+
+# 日誌檔與本地環境變數
+*.log
+.env
+.env.local
+
+# Git 與 GitHub 配置 (視需求保留，若需要 AI 幫忙寫 CI/CD 則不要排除 .github)
+# .github/

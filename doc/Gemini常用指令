@@ -1,0 +1,3 @@
+
+# 查詢當前可用的 Gemini 模型列表，ket 若失效則到 Google AI Studio 的 API Keys 頁面重新申請一個新的 API Key，並替換掉上面 URL 中的 key 參數值。
+curl "https://generativelanguage.googleapis.com/v1beta/models?key=AIzaSyCLbA1qQ1oqfHUOzxnhO4TLar3YXw4nc74"

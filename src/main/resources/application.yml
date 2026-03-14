@@ -1,0 +1,88 @@
+# ==========================================
+# Spring 核心變數設定
+# ==========================================
+spring:
+  # 對應 XML 中的 <springProperty source="spring.application.name" ... />
+  application:
+    name: demo-springboot-ai
+
+  # 對應 XML 中的 <springProfile name="dev"> 或 <springProfile name="prod">
+  profiles:
+    active: '@profileActive@' # 讓 Maven 打包時來替換這個值
+
+  # 關閉網頁伺服器，並關閉 Spring 啟動的 ASCII 橫幅 (for MCP Server)
+  main:
+    web-application-type: none
+    banner-mode: off
+
+  # ==========================================
+  # PostgreSQL 實體資料庫連線設定
+  # ==========================================
+  datasource:
+    url: jdbc:postgresql://localhost:5433/rag_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10 # 企業級標準連線池設定
+
+  # ==========================================
+  # Spring AI 相關設定
+  # ==========================================
+  ai:
+    google:
+      genai:
+        # 第一層：給 Chat 模型的 API Key，請在啟動專案時設定環境變數，例如：-DGEMINI_API_KEY=您的金鑰
+        api-key: ${GEMINI_API_KEY}
+        chat:
+          options:
+            # 指定使用的 Gemini 模型，可依需求改為 gemini-2.5-flash、gemini-3-flash-preview、gemini-3-pro-preview、gemini-3.1-pro-preview 等 (若結合Tools機制，會有出現thought_signature問題，以後遇到再處理)
+            model: gemini-3-flash-preview
+            # 溫度參數 (0.0~1.0)，數值越高回答越具創意
+            temperature: 0.7
+        # 💡 新增：喚醒 Gemini 的向量轉換大腦
+        embedding:
+          # 💡 終極解藥：因為 1.1.0 的 Bug 導致它不會往下繼承，
+          # 所以我們在這裡「再宣告一次 API Key」給它專屬使用！
+          api-key: ${GEMINI_API_KEY}
+          # 純文字向量模型
+          text:
+            options:
+              # Google 目前覆蓋率最廣、最穩定的向量模型端點
+              model: gemini-embedding-001
+              # 💡 架構師救命符：強制命令模型輸出 768 維度！這必須跟 PostgreSQL 的欄位規格完全一致！
+              dimensions: 768
+
+# ==========================================
+# Tools 工具組設定
+# ==========================================
+rag:
+  tools:
+    hr: 請假、薪資、出差、員工福利、人資
+    it: 智慧工廠、網路層、感知層、邊緣層、平台層、應用層、合勤(Zyxel)、巴魯夫(Balluff)、倍福(Beckhoff)、無線IO-Link、防火牆、HA、Switch、AI
+    baby: 台灣人口、新生兒、出生率、生育率、死亡、女性
+
+# ==========================================
+# Logging 原生變數設定
+# ==========================================
+logging:
+  # 控制各個套件的輸出層級 (會覆寫 XML 裡的 <root level="INFO">)
+  level:
+    root: INFO
+    org.example: DEBUG # 讓您自己的程式碼印出詳細的 Debug 資訊
+    org.springframework.ai: DEBUG # 開啟 Spring AI 的底層日誌，方便觀察與 Ollama 的連線
+  file:
+    path: D:/idea-worksapce/logs               # 對應 XML 的 LOG_PATH
+    name: demo-springboot-cli      # 對應 XML 的 LOG_FILE_NAME
+
+# ----------------------------------------------------------------------
+# 　　　　【Bitfinex 設定】
+# ----------------------------------------------------------------------
+bitfinex:
+  api:
+    key: ddf2c62d58350f86bdcd626bf5a03bdee1ad73a9e63
+    secret: 6d9ccb753b697b600e7b36a5364d07789bd8389b075
+    algorithm: HmacSHA384 # 登入密碼的演算法
+  webSocket:
+    uri: wss://api.bitfinex.com/ws/2 # webStocket
+

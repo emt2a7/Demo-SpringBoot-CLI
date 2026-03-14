@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  logback-spring.xml
+  ==========
+  說明 (繁體中文)：
+  1) 這份檔案為 Spring Boot 的 logback 配置檔（使用 Spring 的預設 values 與 profile 支援）。
+  2) 檔名使用 `-spring` 後綴，讓 Spring Boot 在啟動時可以載入並處理 Spring profile 相關的設定（例如 dev / prod）。
+  3) 請勿將敏感資訊寫入日誌；若要保留更長歷史或更大容量，請調整 `maxHistory` 與 `totalSizeCap`。
+  4) 檔案採用 UTF-8 編碼；Console 與 File 的 charset 都已設定為 UTF-8。
+-->
+<configuration>
+    <!-- NopStatusListener：Logback 的狀態監聽器，這裡使用 NopStatusListener 代表不輸出任何狀態訊息（適合生產環境）。若要調試 Logback 配置，可以改用 OnConsoleStatusListener。 -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
+    <!-- 引入 Spring Boot 的預設 Logback 設定（包含 CONSOLE pattern 等預設變數） -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- 讓 Logback 引擎去讀取 application.yml 裡面的 spring.application.name，並把它變成一個名為 APP_NAME 的變數。如果找不到，就用 default-app -->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="default-app"/>
+
+    <!-- 讀取 logging.file.path 與 logging.file.name 這兩個變數，分別對應到日誌檔案的路徑與名稱。如果找不到，就使用預設值 logs 和 app -->
+    <springProperty scope="context" name="LOG_PATH" source="logging.file.path" defaultValue="logs"/>
+    <springProperty scope="context" name="LOG_FILE_NAME" source="logging.file.name" defaultValue="app"/>
+
+    <!-- Console appender：適合開發環境，輸出到標準輸出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- 使用 Spring Boot 預設的 console pattern（預先由 defaults.xml 定義） -->
+            <pattern>%d %-5level [%thread] %logger{0}: %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Rolling file appender：適合生產環境（每日切檔 + 大小限制） -->
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 實際輸出的檔案位置，會以 LOG_PATH 與 LOG_FILE_NAME 組合 -->
+        <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+
+        <!--
+          SizeAndTimeBasedRollingPolicy：結合時間與大小策略
+          - fileNamePattern: 歷史檔案命名規則（%d 代表日期，%i 代表同日的序號）
+          - maxFileSize: 單一檔案最大值（超過後會以序號切檔）
+          - maxHistory: 保留的歷史天數
+          - totalSizeCap: 所有歷史檔案總上限
+          注意：若要確保磁碟空間，請依實際需求調整上述數值。
+        -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/archived/${LOG_FILE_NAME}-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <!-- 檔案輸出的格式：時間、執行緒、日誌等級、logger 與訊息 -->
+            <pattern>%d %-5level [%thread] %logger{0}: %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--
+      Spring Profile: dev
+      - 開發環境通常只輸出到 Console（方便即時查看）
+      - 可透過啟動參數指定啟用的 profile（例如：java -jar app.jar 並傳入應用參數）
+    -->
+    <springProfile name="dev">
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="ROLLING_FILE" />
+        </root>
+    </springProfile>
+
+    <!--
+      Spring Profile: prod, qa
+      - 生產或測試環境同時輸出到 Console 與 Rolling File
+      - 可視需求把 console 移除（在某些容器化環境只需 file）
+    -->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="ROLLING_FILE" />
+        </root>
+    </springProfile>
+
+</configuration>

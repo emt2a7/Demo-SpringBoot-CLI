@@ -1,0 +1,43 @@
+name: Build GraalVM Native CLI
+
+# 觸發條件：當推送到 main 分支，或在 GitHub 網頁上手動點擊執行時
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-native-image:
+    name: Build Native CLI on Linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 下載程式碼 (Checkout)
+        uses: actions/checkout@v4
+
+      - name: ☕ 設定 GraalVM JDK (Java 25)
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ⚙️ 設定 Maven 快取 (加速後續編譯)
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: 🚀 執行 AOT 原生編譯 (Linux 環境)
+        run: mvn clean -P"native,prod" package -DskipTests
+
+      - name: 📦 上傳編譯產物 (Upload Artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI-CLI-Tool-Linux
+          # 🟢 提示：Linux 環境下編譯出來的原生執行檔「沒有」副檔名
+          path: target/Demo-SpringBoot-CLI
+          if-no-files-found: warn
+          retention-days: 7

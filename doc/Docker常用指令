@@ -1,0 +1,12 @@
+
+
+# 建立 PostgreSQL 18 + pgvector 擴充套件
+docker run -d --name rag-postgres-18 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=rag_db -p 5432:5432 pgvector/pgvector:pg18
+
+# 停用 PostgreSQL 18
+docker stop rag-postgres-18
+
+# 刪除 PostgreSQL 18
+docker rm rag-postgres-18
+
+
