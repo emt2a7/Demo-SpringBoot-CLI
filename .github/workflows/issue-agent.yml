@@ -27,15 +27,16 @@ jobs:
 
       - name: 🚀 執行 AI CLI 處理 Issue
         id: ai-task
-        # 將 Issue 的標題與內容傳入你的 CLI 工具
         run: |
           echo "正在處理 Issue: ${{ github.event.issue.title }}"
           
-          # 執行你的極速 CLI (假設你的 CLI 會印出結果到終端機)
+          # 執行你的極速 CLI
           ./Demo-SpringBoot-CLI --mode=agent "分析這個 Issue: ${{ github.event.issue.title }} - ${{ github.event.issue.body }}" > ai_result.txt
           
-          # 讀取結果並存入環境變數供下一步使用
-          echo "result=$(cat ai_result.txt)" >> $GITHUB_OUTPUT
+          # 🟢 架構師的修正：使用 EOF 語法安全地將「多行文字」寫入 GITHUB_OUTPUT
+          echo "result<<EOF" >> $GITHUB_OUTPUT
+          cat ai_result.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: 💬 將 AI 結果回覆到 Issue 中
         uses: peter-evans/create-or-update-comment@v4
