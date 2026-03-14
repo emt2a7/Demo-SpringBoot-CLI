@@ -1,0 +1,50 @@
+name: Issue AI Agent
+
+# 🟢 觸發條件：當有新的 Issue 被「開啟 (opened)」時
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  run-cli-agent:
+    runs-on: ubuntu-latest
+
+    # 賦予這個腳本能在 Issue 底下留言的權限
+    permissions:
+      issues: write
+      actions: read
+
+    steps:
+      - name: 📥 下載最新版的 Linux CLI 執行檔
+        # 使用 GitHub 官方 CLI 工具 (gh) 去抓取我們另一個 Workflow 編譯出來的產物
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 尋找最近一次成功的編譯並下載 Artifact
+          gh run download -n AI-CLI-Tool-Linux -R ${{ github.repository }} -D .
+          # 賦予 Linux 執行權限
+          chmod +x Demo-SpringBoot-CLI
+
+      - name: 🚀 執行 AI CLI 處理 Issue
+        id: ai-task
+        # 將 Issue 的標題與內容傳入你的 CLI 工具
+        run: |
+          echo "正在處理 Issue: ${{ github.event.issue.title }}"
+          
+          # 執行你的極速 CLI (假設你的 CLI 會印出結果到終端機)
+          ./Demo-SpringBoot-CLI --mode=agent "分析這個 Issue: ${{ github.event.issue.title }} - ${{ github.event.issue.body }}" > ai_result.txt
+          
+          # 讀取結果並存入環境變數供下一步使用
+          echo "result=$(cat ai_result.txt)" >> $GITHUB_OUTPUT
+
+      - name: 💬 將 AI 結果回覆到 Issue 中
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            🤖 **AI 助理回覆：**
+            我已經收到並處理了您的 Issue！以下是分析結果：
+            
+            ```text
+            ${{ steps.ai-task.outputs.result }}
+            ```
