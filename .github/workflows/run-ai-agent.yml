@@ -1,0 +1,49 @@
+name: 🤖 手動執行 AI 助理 (Run CLI)
+
+# 🟢 關鍵設定：開啟網頁手動觸發，並加上「輸入對話框」
+on:
+  workflow_dispatch:
+    inputs:
+      user_prompt:
+        description: '請輸入你要讓 AI 執行的指令或問題：'
+        required: true
+        default: '幫我總結 Spring Boot AOT 的優點'
+
+jobs:
+  run-cli:
+    runs-on: ubuntu-latest
+
+    # 需要讀取 Artifact 的權限
+    permissions:
+      actions: read
+
+    steps:
+      - name: 📥 從最近的編譯紀錄下載 Linux 執行檔
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 透過 GitHub CLI 自動抓取最新打包好的 AI-CLI-Tool-Linux
+          gh run download -n AI-CLI-Tool-Linux -R ${{ github.repository }} -D .
+          
+          # 賦予 Linux 執行權限
+          chmod +x Demo-SpringBoot-CLI
+
+      - name: 🚀 啟動極速 AI CLI 處理你的問題
+        run: |
+          echo "🗣️ 你的提問: ${{ inputs.user_prompt }}"
+          echo "========================================="
+          
+          # 執行你的 Native Image 工具，並把結果存到 result.txt
+          ./Demo-SpringBoot-CLI --mode=agent "${{ inputs.user_prompt }}" > result.txt
+          
+          # 將內容印在終端機 Log 中
+          cat result.txt
+          
+          echo "========================================="
+          
+          # 🌟 架構師小彩蛋：把結果直接輸出到 GitHub 的摘要面板 (Step Summary)
+          echo "### 🤖 AI 助理的回覆" >> $GITHUB_STEP_SUMMARY
+          echo "提問：*${{ inputs.user_prompt }}*" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          cat result.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
