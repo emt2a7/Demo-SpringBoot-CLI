@@ -1,0 +1,49 @@
+name: AI助理-發布至正式環境
+
+# 🟢 觸發條件一：現在只有在你打上 'v' 開頭的版本標籤 (如 v1.0.0) 時，才會觸發編譯
+# 🟢 觸發條件二：開啟網頁手動觸發
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    name: Build and Release on Linux
+    runs-on: ubuntu-latest
+
+    # 賦予寫入 Release 的權限
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 下載程式碼
+        uses: actions/checkout@v4
+
+      - name: ☕ 設定 GraalVM JDK (Java 25)
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ⚙️ 設定 Maven 快取
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: 🚀 執行 AOT 原生編譯
+        run: mvn clean -P"native,prod" package -DskipTests
+
+      - name: 📦 發布到 GitHub Releases (永久保存)
+        # 🟢 架構升級：使用開源社群最強的 Release 套件，將執行檔永久掛載在 Release 頁面
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: target/Demo-SpringBoot-CLI
+          name: Release ${{ github.ref_name }}
+          generate_release_notes: true # 自動生成版本更新日誌

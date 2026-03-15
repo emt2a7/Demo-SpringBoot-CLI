@@ -40,4 +40,5 @@ jobs:
           # 🟢 提示：Linux 環境下編譯出來的原生執行檔「沒有」副檔名
           path: target/Demo-SpringBoot-CLI
           if-no-files-found: warn
+          # 「垃圾回收 (Garbage Collection)」機制：每次編譯出來的執行檔，GitHub 只會幫你保留 N 天，時間一到 GitHub 背景機器人就會自動把過期的執行檔徹底刪除，釋放儲存空間。
           retention-days: 7
