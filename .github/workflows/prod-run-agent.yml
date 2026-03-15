@@ -22,8 +22,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 🟢 架構關鍵：這裡使用 gh release download，確保你測到的是正式版的程式碼
-          gh release download --pattern "Demo-SpringBoot-CLI" -D .
+          # 🟢 加上 -R ${{ github.repository }} 明確指定專案，完美避開 .git 依賴
+          gh release download --pattern "Demo-SpringBoot-CLI" -R ${{ github.repository }} -D .
           
           # 賦予 Linux 執行權限
           chmod +x Demo-SpringBoot-CLI

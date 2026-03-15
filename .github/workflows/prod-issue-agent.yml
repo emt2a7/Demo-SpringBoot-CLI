@@ -20,8 +20,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 🟢 架構升級：使用 gh release download，永遠去抓最新正式版的執行檔，不再怕過期！
-          gh release download --pattern "Demo-SpringBoot-CLI" -D .
+          # 🟢 加上 -R ${{ github.repository }} 明確指定專案，完美避開 .git 依賴
+          gh release download --pattern "Demo-SpringBoot-CLI" -R ${{ github.repository }} -D .
+          
           # 賦予 Linux 執行權限
           chmod +x Demo-SpringBoot-CLI
 
