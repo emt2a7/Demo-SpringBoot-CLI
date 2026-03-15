@@ -15,7 +15,6 @@ import java.time.OffsetDateTime;
 
 /**
  * 主啟動類別。
- *
  * 此類別為 Spring Boot 應用的進入點，負責啟動整個 Spring 容器。
  * 所有示範 Controller / Service 將由 Spring 容器管理。
  */
@@ -43,7 +42,7 @@ public class Main {
 
             //範例_有記憶功能的聊天對話(context);
 
-            //範例_將AI回覆對話轉換成結構化輸出(context);
+            範例_將AI回覆對話轉換成結構化輸出(context);
 
             //範例_上傳PDF到RAG向量資料庫(context);
 

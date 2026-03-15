@@ -30,28 +30,26 @@ spring:
   # Spring AI 相關設定
   # ==========================================
   ai:
-    google:
-      genai:
-        # 第一層：給 Chat 模型的 API Key，請在啟動專案時設定環境變數，例如：-DGEMINI_API_KEY=您的金鑰
-        api-key: ${GEMINI_API_KEY}
-        chat:
-          options:
-            # 指定使用的 Gemini 模型，可依需求改為 gemini-2.5-flash、gemini-3-flash-preview、gemini-3-pro-preview、gemini-3.1-pro-preview 等 (若結合Tools機制，會有出現thought_signature問題，以後遇到再處理)
-            model: gemini-3-flash-preview
-            # 溫度參數 (0.0~1.0)，數值越高回答越具創意
-            temperature: 0.7
-        # 💡 新增：喚醒 Gemini 的向量轉換大腦
-        embedding:
-          # 💡 終極解藥：因為 1.1.0 的 Bug 導致它不會往下繼承，
-          # 所以我們在這裡「再宣告一次 API Key」給它專屬使用！
-          api-key: ${GEMINI_API_KEY}
-          # 純文字向量模型
-          text:
-            options:
-              # Google 目前覆蓋率最廣、最穩定的向量模型端點
-              model: gemini-embedding-001
-              # 💡 架構師救命符：強制命令模型輸出 768 維度！這必須跟 PostgreSQL 的欄位規格完全一致！
-              dimensions: 768
+    openai:
+      # 🟢 關鍵 1：把原本 OpenAI 的網址，偷天換日改成 GitHub (Azure) 的模型閘道
+      base-url: https://models.inference.ai.azure.com
+      # 🟢 關鍵 2：填入你剛剛申請的 GitHub PAT
+      api-key: ${GITHUB_TOKEN}
+      chat:
+        # 🟢 關鍵修復 1：強制拔除預設的 /v1，直接使用微軟 Azure 的對話路徑
+        completions-path: /chat/completions
+        options:
+          # 🟢 關鍵 3：指定使用 o1-mini 或 o1-preview (這就是你說的 0x 模型)
+          model: gpt-4o
+      # 🟢 2. 新增 OpenAI 的 Embedding 向量設定
+      embedding:
+        # 🟢 關鍵修復 2：強制拔除預設的 /v1，直接使用微軟 Azure 的向量路徑
+        embeddings-path: /embeddings
+        options:
+          # 使用 OpenAI 最新的小巧高精準模型
+          model: text-embedding-3-small
+          # 💡 架構師關鍵設定：強制壓縮成 768 維度，與你現有的資料庫欄位規格保持一致
+          dimensions: 768
 
 # ==========================================
 # Tools 工具組設定

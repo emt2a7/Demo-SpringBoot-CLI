@@ -13,7 +13,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <!-- Maven 不允許在 parent 的 version 使用 property，因此此處使用 literal 以確保可建置；其他依賴維持 properties 管理 -->
-        <version>4.0.3</version>
+        <version>3.4.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -22,15 +22,15 @@
 
     <properties>
         <!-- Java / Build -->
-        <java.version>25</java.version>
+        <java.version>21</java.version>
 
         <!-- Spring Boot / BOM versions (single-truth) -->
-        <spring-boot.version>4.0.3</spring-boot.version>
+        <spring-boot.version>3.4.3</spring-boot.version>
         <spring-ai-bom.version>1.1.0</spring-ai-bom.version>
 
         <!-- Tooling / Plugin Versions (single truth) -->
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <spring-boot-maven-plugin.version>4.0.3</spring-boot-maven-plugin.version>
+        <spring-boot-maven-plugin.version>3.4.3</spring-boot-maven-plugin.version>
 
         <!-- Library versions (single-truth source) -->
         <!-- Lombok: 最低 1.18.42，與 JDK25 相容 -->
@@ -75,6 +75,12 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
+        <!-- Spring Boot Starter Web: 提供 Web 功能，且由 Spring Boot 管理版本 (原本是移除的，因應使用 open-ai 模組而加入的) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!-- Spring Boot Test (exclude JUnit Vintage) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -98,10 +104,16 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Spring AI Starter: Google GenAI 模組 (其實就是指 Gemini) -->
+        <!-- Spring AI Starter: Google GenAI 模組 (其實就是指 Gemini)
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-model-google-genai</artifactId>
+        </dependency>
+        -->
+        <!-- Spring AI Starter: OpenAI 模組 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
         </dependency>
 
         <!-- Spring AI Starter: Chat Memory 模組 -->
@@ -110,11 +122,12 @@
             <artifactId>spring-ai-starter-model-chat-memory</artifactId>
         </dependency>
 
-        <!-- Spring AI Starter: Google GenAI Embedding 向量模組 -->
+        <!-- Spring AI Starter: Google GenAI Embedding 向量模組
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-model-google-genai-embedding</artifactId>
         </dependency>
+        -->
 
         <!-- Spring AI Starter: Vector Store 模組 -->
         <dependency>
@@ -274,28 +287,6 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- GraalVM Native Image plugin: 預留位置，實際使用時需根據專案需求進行配置 -->
-            <plugin>
-                <groupId>org.graalvm.buildtools</groupId>
-                <artifactId>native-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>${start-class}</mainClass>
-                    <imageName>${project.artifactId}</imageName>
-                    <buildArgs>
-                        <buildArg>--no-fallback</buildArg>
-                    </buildArgs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>build-native</id>
-                        <goals>
-                            <goal>compile-no-fork</goal>
-                        </goals>
-                        <phase>package</phase>
                     </execution>
                 </executions>
             </plugin>
