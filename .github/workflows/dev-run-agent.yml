@@ -1,4 +1,4 @@
-name: 【🔧 AI助理】手動測試「開發」環境
+name: 【👷 AI助理】手動測試「開發」環境
 
 # 🟢 觸發條件：開啟網頁手動觸發，並加上「輸入對話框」
 on:
@@ -47,9 +47,3 @@ jobs:
           echo '```text' >> $GITHUB_STEP_SUMMARY
           cat result.txt >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-
-defaults:
-permissions:
-env:
-run-name:
-concurrency:
