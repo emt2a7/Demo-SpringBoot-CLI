@@ -15,9 +15,9 @@ jobs:
   call-super-build:                                                               # Job名稱：call-super-build
     uses: ./.github/workflows/build-shared-module.yml                             # 載入共用模組 Workflow 定義檔
     with:                                                                         # 傳入參數
-      job_name: "Build Native CLI"                                                # - 參數名稱
-      maven_profiles: "native,prod,openai"                                        # - 參數名稱
-      artifact_name: "AI-CLI-Linux"                                               # - 參數名稱
+      job_name: "產出執行檔 (正式環境)"                                               # - 參數：Job 顯示在 UI 的名稱
+      maven_profiles: "native,prod,openai"                                        # - 參數：包版環境
+      artifact_name: "Demo-Spring-CLI-Prod"                                       # - 參數：「執行檔」的標籤名稱，命名保持唯一不重複 (本檔案共有２處需一併調整)
 
   create-release:                                                                 # Job名稱：create-release
     needs: call-super-build                                                       # 必須等前一個 Job (call-super-build) 執行完成後才會執行
@@ -29,17 +29,19 @@ jobs:
 
     steps:                                                                        # 工作步驟
       # --------------------------------------------------------------------------
-      - name: 📥 下載編譯產物
+      - name: 📥 下載編譯產物                                                       # UI 顯示名稱
         uses: actions/download-artifact@v4
         with:
-          name: Demo-SpringBoot-CLI
-          path: target/ # 指定下載後放回 target 資料夾，以配合後續路徑
+          name: Demo-Spring-CLI-Prod                                              # 「執行檔」的標籤名稱，命名保持唯一不重複 (本檔案共有２處需一併調整)
+          path: target/                                                           # 下載保存路徑
+
       # --------------------------------------------------------------------------
-      - name: 📦 發布到 GitHub Releases (永久保存)
+      - name: 📦 發布到 GitHub Releases (永久保存)                                  # UI 顯示名稱
         uses: softprops/action-gh-release@v2
         with:
-          files: target/Demo-SpringBoot-CLI
-          tag_name: ${{ github.event.inputs.version_tag || github.ref_name }}
-          name: Release ${{ github.event.inputs.version_tag || github.ref_name }}
+          files: target/demo-springboot-cli*
+          tag_name: ${{ inputs.version_tag || github.ref_name }}
+          name: Release ${{ inputs.version_tag || github.ref_name }}
           generate_release_notes: true
+
       # --------------------------------------------------------------------------

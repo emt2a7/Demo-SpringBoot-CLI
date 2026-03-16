@@ -19,38 +19,44 @@ on:
 
 jobs:                                                                       # 工作流程
   build:                                                                    # Job名稱：build
-    name: ${{ inputs.job_name }}                                            # 指定 Job 顯示在 UI 的名稱：由傳入參數動態決定
+    name: ${{ inputs.job_name }}                                            # Job 顯示在 UI 的名稱：由傳入參數動態決定
     runs-on: ubuntu-latest                                                  # 執行環境
     steps:                                                                  # 工作步驟
       # --------------------------------------------------------------------
-      - name: 📥 下載程式碼
+      - name: 📥 下載程式碼                                                   # UI 顯示名稱
         uses: actions/checkout@v4
+
       # --------------------------------------------------------------------
-      - name: ☕ 設定 GraalVM JDK
+      - name: ☕ 設定 GraalVM JDK                                           # UI 顯示名稱
         uses: graalvm/setup-graalvm@v1
         with:
           java-version: '21'
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
       # --------------------------------------------------------------------
-      - name: ⚙️ 設定 Maven 快取
+      - name: ⚙️ 設定 Maven 快取                                             # UI 顯示名稱
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+
       # --------------------------------------------------------------------
-      - name: 🚀 執行 AOT 原生編譯
+      - name: 🚀 產出「執行檔」                                               # UI 顯示名稱 (執行 AOT 原生編譯)
         run: mvn clean -P"${{ inputs.maven_profiles }}" package -DskipTests
+
       # --------------------------------------------------------------------
-      - name: 🕵️ 檢查編譯產物 (Debug 工具)
+      - name: 🕵️ 列出 target 目錄清單                                         # UI 顯示名稱 (方便日後檢查編譯出來的檔案名稱和大小，確認是否符合預期)
         run: ls -lh target/
+
       # --------------------------------------------------------------------
-      - name: 📦 上傳編譯檔案
+      - name: 📦 上傳編譯檔案                                                 # UI 顯示名稱
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.artifact_name }}
-          path: target/demo-springBoot-cli*                                 # Linux 環境下編譯出來的原生執行檔「沒有」副檔名，且GraalVM 在 Linux 下產生的二進位檔會強制變成全小寫
+          name: ${{ inputs.artifact_name }}                                 # 「執行檔」上傳後的標籤名稱，命名保持唯一不重複
+          path: target/demo-springboot-cli*                                 # 「執行檔」上傳前的檔案位置，Linux 環境下編譯出來的原生執行檔「沒有」副檔名，且GraalVM 在 Linux 下產生的二進位檔會強制變成全小寫
           retention-days: 3                                                 # 「垃圾回收 (Garbage Collection)」機制：每次編譯出來的執行檔，GitHub 只會幫你保留 N 天，時間一到 GitHub 背景機器人就會自動把過期的執行檔徹底刪除，釋放儲存空間。
+
       # --------------------------------------------------------------------

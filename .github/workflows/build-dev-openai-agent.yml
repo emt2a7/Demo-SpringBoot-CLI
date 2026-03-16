@@ -7,6 +7,6 @@ jobs:
   call-super-build:                                       # Job名稱：call-super-build
     uses: ./.github/workflows/build-shared-module.yml     # 載入共用模組 Workflow 定義檔
     with:                                                 # 傳入參數
-      job_name: "Build Native CLI"                        # - 參數名稱
-      maven_profiles: "native,dev,openai"                 # - 參數名稱
-      artifact_name: "AI-CLI-Linux"                       # - 參數名稱
+      job_name: "產出執行檔 (開發環境)"                       # - 參數：Job 顯示在 UI 的名稱
+      maven_profiles: "native,dev,openai"                 # - 參數：包版環境
+      artifact_name: "Demo-Spring-CLI-Dev"                # - 參數：「執行檔」的標籤名稱，命名保持唯一不重複
