@@ -18,6 +18,6 @@ jobs:                                                 # 工作流程
     with:
       user_prompt: ${{ inputs.user_prompt }}          # 輸入參數：提示詞 (Prompt)
       download_type: 'artifact'                       # 輸入參數：下載來源 (填寫 "artifact" 或 "release")
-      artifact_name: 'Demo-SpringBoot-CLI-Dev'        # 輸入參數：Artifact 名稱 (僅在 download_type 為 artifact 時有效)
+      artifact_name: 'demo-springboot-cli'            # 輸入參數：「執行檔」的實體檔名 (僅在 download_type 為 artifact 時有效)
       summary_title: '### 🤖 AI 助理的回覆 (開發版本)'   # 輸入參數：GitHub Step Summary 顯示的標題
     secrets: inherit                                  # 確保共用模組能繼承並使用 GITHUB_TOKEN
