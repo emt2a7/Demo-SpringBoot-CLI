@@ -32,7 +32,7 @@ jobs:
       - name: 📥 下載編譯產物                                                       # UI 顯示名稱
         uses: actions/download-artifact@v4
         with:
-          name: Demo-Spring-CLI-Prod                                              # 「執行檔」的標籤名稱，命名保持唯一不重複 (本檔案共有２處需一併調整)
+          name: Demo-SpringBoot-CLI-Prod                                          # 「執行檔」的標籤名稱，命名保持唯一不重複 (本檔案共有２處需一併調整)
           path: target/                                                           # 下載保存路徑
 
       # --------------------------------------------------------------------------
