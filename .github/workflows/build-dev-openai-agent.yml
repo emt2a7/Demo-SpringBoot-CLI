@@ -1,4 +1,4 @@
-name: 【🚀 AI助理】發布至「開發」環境
+name: 【🚀 AI助理】發布至「開發+OpenAI」環境
 
 on:
   workflow_dispatch:                                      # 觸發時機：手動觸發
