@@ -1,0 +1,76 @@
+name: 【共用模組】手動執行
+
+on:
+  workflow_call:                                                            # 觸發時機：被其他 Workflow 呼叫
+    inputs:                                                                 # 定義傳入的參數
+      user_prompt:                                                          # 定義傳入的參數
+        description: '使用者輸入的提示詞 (Prompt)'                              # - 參數說明
+        required: true                                                      # - 參數是否必填
+        type: string                                                        # - 參數類型
+      download_type:                                                        # 定義傳入的參數
+        description: '下載來源 (填寫 "artifact" 或 "release")'                 # - 參數說明
+        required: true                                                      # - 參數是否必填
+        type: string                                                        # - 參數類型
+      artifact_name:                                                        # 定義傳入的參數
+        description: 'Artifact 名稱 (僅在 download_type 為 artifact 時有效)'   # - 參數說明
+        required: false                                                     # - 參數是否必填
+        type: string                                                        # - 參數類型
+        default: 'AI-CLI-Tool-Linux'                                        # - 參數預設值
+      release_pattern:                                                      # 定義傳入的參數
+        description: 'Release 檔名特徵 (僅在 download_type 為 release 時有效)'  # - 參數說明
+        required: false                                                     # - 參數是否必填
+        type: string                                                        # - 參數類型
+        default: 'Demo-SpringBoot-CLI'                                      # - 參數預設值
+      summary_title:                                                        # 定義傳入的參數
+        description: 'GitHub Step Summary 顯示的標題'                         # - 參數說明
+        required: false                                                     # - 參數是否必填
+        type: string                                                        # - 參數類型
+        default: '### 🤖 AI 助理的回覆'                                       # - 參數預設值
+
+jobs:                                                                       # 工作流程
+  execute:                                                                  # Job名稱：execute
+    runs-on: ubuntu-latest                                                  # 執行環境
+
+    permissions:                                                            # 賦予權限
+      actions: read
+      contents: read
+
+    steps:                                                                  # 工作步驟
+      # --------------------------------------------------------------------
+      # 策略 A：開發環境 -> 從 GitHub Actions Artifact 下載
+      - name: 📥 從最近的編譯紀錄下載 (Artifact 模式)                            # UI 顯示名稱
+        if: ${{ inputs.download_type == 'artifact' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh run download -n ${{ inputs.artifact_name }} -R ${{ github.repository }} -D .
+
+      # --------------------------------------------------------------------
+      # 策略 B：正式環境 -> 從 GitHub Release 下載
+      - name: 📥 從最新 Release 下載 (Release 模式)                           # UI 顯示名稱
+        if: ${{ inputs.download_type == 'release' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release download --pattern "${{ inputs.release_pattern }}" -R ${{ github.repository }} -D .
+
+      # --------------------------------------------------------------------
+      # 共用執行邏輯
+      - name: 🚀 啟動極速 AI CLI 處理你的問題                                   # UI 顯示名稱
+        run: |
+          # 賦予 Linux 執行權限
+          chmod +x Demo-SpringBoot-CLI
+          
+          echo "🗣️ 你的提問: ${{ inputs.user_prompt }}"
+          echo "========================================="
+          
+          # 執行 Native Image 工具
+          ./Demo-SpringBoot-CLI --mode=agent "${{ inputs.user_prompt }}" > result.txt
+          
+          cat result.txt
+          echo "========================================="
+          
+          # 輸出到 GitHub 摘要面板
+          echo "${{ inputs.summary_title }}" >> $GITHUB_STEP_SUMMARY
+          echo "提問：*${{ inputs.user_prompt }}*" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          cat result.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
