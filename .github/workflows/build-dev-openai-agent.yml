@@ -9,4 +9,4 @@ jobs:
     with:                                                 # 傳入參數
       job_name: "Build Native CLI"                        # - 參數名稱
       maven_profiles: "native,dev,openai"                 # - 參數名稱
-      artifact_name: "Demo-SpringBoot-CLI"                # - 參數名稱
+      artifact_name: "AI-CLI-Linux"                       # - 參數名稱

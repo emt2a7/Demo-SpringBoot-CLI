@@ -17,7 +17,7 @@ jobs:
     with:                                                                         # 傳入參數
       job_name: "Build Native CLI"                                                # - 參數名稱
       maven_profiles: "native,prod,openai"                                        # - 參數名稱
-      artifact_name: "Demo-SpringBoot-CLI"                                        # - 參數名稱
+      artifact_name: "AI-CLI-Linux"                                               # - 參數名稱
 
   create-release:                                                                 # Job名稱：create-release
     needs: call-super-build                                                       # 必須等前一個 Job (call-super-build) 執行完成後才會執行
