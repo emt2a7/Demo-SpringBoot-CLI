@@ -19,7 +19,7 @@ jobs:
         run: |
           echo "🚨 開始執行刪除舊紀錄..."
           
-          # ✨ 專家修正：在 list 和 delete 指令後方都加上 -R ${{ github.repository }}
-          gh run list -R ${{ github.repository }} --limit 500 --json databaseId -q '.[].databaseId' | xargs -I{} gh run delete {} -R ${{ github.repository }}
+          # ✨ 架構師魔法：利用 jq 過濾掉自己 (github.run_id)，並加上 --no-run-if-empty 防呆
+          gh run list -R ${{ github.repository }} --limit 500 --json databaseId -q '.[] | select(.databaseId != ${{ github.run_id }}) | .databaseId' | xargs --no-run-if-empty -I{} gh run delete {} -R ${{ github.repository }}
           
           echo "✅ 清理完畢！"
