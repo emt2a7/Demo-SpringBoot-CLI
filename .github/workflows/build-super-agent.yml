@@ -1,0 +1,53 @@
+name: 【共用模組】發布環境
+
+on:
+  workflow_call:                                                            # 觸發時機：被其他 Workflow 呼叫
+    inputs:                                                                 # 定義傳入的參數
+      maven_profiles:                                                       # - 參數名稱
+        description: '包版環境 (prod,openai、dev,openai)'                     # - 參數說明
+        required: true                                                      # - 參數是否必填
+        type: string                                                        # - 參數類型
+      artifact_name:                                                        # 定義傳入的參數
+        description: '輸出檔案名稱 (例如: AI-CLI-Linux-Dev)'                   # - 參數說明
+        required: true                                                      # - 參數是否必填
+        type: string                                                        # - 參數類型
+      job_name:                                                             # 定義傳入的參數
+        description: 'Job 在 UI 上的顯示名稱'                                  # - 參數說明
+        required: true                                                      # - 參數是否必填
+        type: string                                                        # - 參數類型
+        default: 'Build Native CLI'                                         # - 參數預設值
+
+jobs:                                                                       # 工作流程
+  build:                                                                    # Job名稱：build
+    name: ${{ inputs.job_name }}                                            # 指定 Job 顯示在 UI 的名稱：由傳入參數動態決定
+    runs-on: ubuntu-latest                                                  # 執行環境
+    steps:                                                                  # 工作步驟
+      # --------------------------------------------------------------------
+      - name: 📥 下載程式碼
+        uses: actions/checkout@v4
+      # --------------------------------------------------------------------
+      - name: ☕ 設定 GraalVM JDK
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      # --------------------------------------------------------------------
+      - name: ⚙️ 設定 Maven 快取
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      # --------------------------------------------------------------------
+      - name: 🚀 執行 AOT 原生編譯
+        run: mvn clean -P"${{ inputs.maven_profiles }}" package -DskipTests
+      # --------------------------------------------------------------------
+      - name: 📦 上傳編譯檔案
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: target/Demo-SpringBoot-CLI
+          retention-days: 3                                                 # 「垃圾回收 (Garbage Collection)」機制：每次編譯出來的執行檔，GitHub 只會幫你保留 N 天，時間一到 GitHub 背景機器人就會自動把過期的執行檔徹底刪除，釋放儲存空間。
+      # --------------------------------------------------------------------

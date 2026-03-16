@@ -1,0 +1,45 @@
+name: 【🚀 AI助理】發布至「正式」環境
+
+on:
+  push:                                                                           # 觸發時機：打上 'v' 開頭的版本標籤 (如 v1.0.0) 時
+    tags:
+      - 'v*'
+  workflow_dispatch:                                                              # 觸發時機：手動觸發
+    inputs:                                                                       # 定義傳入的參數
+      version_tag:                                                                # - 參數名稱
+        description: '請輸入要版本標籤 (例如 v1.1 或 latest)'                         # - 參數說明
+        required: true                                                            # - 參數是否必填
+        default: 'latest'                                                         # - 參數預設值
+
+jobs:
+  call-super-build:                                                               # Job名稱：call-super-build
+    uses: build-super-agent.yml                                                   # 載入共用模組 Workflow 定義檔
+    with:                                                                         # 傳入參數
+      job_name: "Build Native CLI"                                                # - 參數名稱
+      maven_profiles: "dev,openai"                                                # - 參數名稱
+      artifact_name: "Demo-SpringBoot-CLI"                                        # - 參數名稱
+
+  create-release:                                                                 # Job名稱：create-release
+    needs: call-super-build                                                       # 必須等前一個 Job (call-super-build) 執行完成後才會執行
+    name: Create GitHub Release                                                   # 指定 Job 顯示在 UI 的名稱
+    runs-on: ubuntu-latest                                                        # 執行環境
+
+    permissions:                                                                  # 賦予權限
+      contents: write                                                             # - 寫入權限
+
+    steps:                                                                        # 工作步驟
+      # --------------------------------------------------------------------------
+      - name: 📥 下載編譯產物
+        uses: actions/download-artifact@v4
+        with:
+          name: Demo-SpringBoot-CLI
+          path: target/ # 指定下載後放回 target 資料夾，以配合後續路徑
+      # --------------------------------------------------------------------------
+      - name: 📦 發布到 GitHub Releases (永久保存)
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/Demo-SpringBoot-CLI
+          tag_name: ${{ github.event.inputs.version_tag || github.ref_name }}
+          name: Release ${{ github.event.inputs.version_tag || github.ref_name }}
+          generate_release_notes: true
+      # --------------------------------------------------------------------------
