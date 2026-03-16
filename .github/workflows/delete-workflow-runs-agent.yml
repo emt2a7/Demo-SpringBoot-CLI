@@ -1,0 +1,23 @@
+name: 🧹 刪除所有 workflow 紀錄
+
+on:
+  #schedule:
+  #  - cron: '0 2 * * *'                            # 每天凌晨 2 點自動執行
+  workflow_dispatch:                                # 觸發時機：手動觸發
+
+jobs:
+  delete_workflow_runs:                             # Job名稱：delete_workflow_runs
+    runs-on: ubuntu-latest                          # 執行環境
+    permissions:                                    # 賦予權限
+      actions: write                                # - 必須給予刪除 Actions 紀錄的權限
+
+    steps:                                          # 工作步驟
+      # --------------------------------------------------------------------------
+      - name: 🗑️ 刪除前 500 筆 Workflow 紀錄          # UI 顯示名稱
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🚨 開始執行刪除舊紀錄..."
+          # 抓取最近 500 筆紀錄 ID，並使用原生 gh 指令逐一刪除
+          gh run list --limit 500 --json databaseId -q '.[].databaseId' | xargs -I{} gh run delete {}
+          echo "✅ 清理完畢！"
