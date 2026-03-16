@@ -13,6 +13,7 @@ target/
 *.iws
 *.iml
 *.ipr
+*.log
 
 ### Eclipse ###
 .apt_generated
@@ -22,7 +23,6 @@ target/
 .settings
 .springBeans
 .sts4-cache
-.log
 
 ### NetBeans ###
 /nbproject/private/
