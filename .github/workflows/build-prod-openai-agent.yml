@@ -39,7 +39,7 @@ jobs:
       - name: 📦 發布到 GitHub Releases (永久保存)                                  # UI 顯示名稱
         uses: softprops/action-gh-release@v2
         with:
-          files: target/demo-springboot-cli*
+          files: target/demo-springboot-cli
           tag_name: ${{ inputs.version_tag || github.ref_name }}
           name: Release ${{ inputs.version_tag || github.ref_name }}
           generate_release_notes: true
