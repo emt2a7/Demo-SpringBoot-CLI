@@ -7,11 +7,13 @@ import org.example.dto.StructuredRecord;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.converter.BeanOutputConverter;
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@RegisterReflectionForBinding(StructuredRecord.class) // 告訴 GraalVM：請為 StructuredRecord 保留反射能力，讓 Jackson 可以順利反序列化！
 public class StructuredService {
 
     private final ChatClient chatClient;
