@@ -10,6 +10,10 @@ on:
 
 jobs:                                                 # 工作流程
   run-cli:                                            # Job名稱：run-cli
+    permissions:                                      # 明確賦予呼叫共用模組所需的權限
+      actions: read
+      contents: read
+
     uses: ./.github/workflows/run-shared-module.yml   # 呼叫共用模組時，路徑必須相對於專案根目錄
     with:
       user_prompt: ${{ inputs.user_prompt }}          # 輸入參數：提示詞 (Prompt)
