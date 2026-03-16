@@ -13,7 +13,7 @@ on:
 
 jobs:
   call-super-build:                                                               # Job名稱：call-super-build
-    uses: build-shared-module.yml                                                 # 載入共用模組 Workflow 定義檔
+    uses: ./.github/workflows/build-shared-module.yml                             # 載入共用模組 Workflow 定義檔
     with:                                                                         # 傳入參數
       job_name: "Build Native CLI"                                                # - 參數名稱
       maven_profiles: "native,prod,openai"                                        # - 參數名稱
