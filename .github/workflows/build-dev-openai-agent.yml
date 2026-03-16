@@ -5,8 +5,8 @@ on:
 
 jobs:
   call-super-build:                                       # Job名稱：call-super-build
-    uses: build-super-agent.yml                           # 載入共用模組 Workflow 定義檔
+    uses: ./.github/workflows/build-super-agent.yml       # 載入共用模組 Workflow 定義檔
     with:                                                 # 傳入參數
-      job_name: "Build Native CLI1"                        # - 參數名稱
+      job_name: "Build Native CLI"                        # - 參數名稱
       maven_profiles: "dev,openai"                        # - 參數名稱
       artifact_name: "Demo-SpringBoot-CLI"                # - 參數名稱

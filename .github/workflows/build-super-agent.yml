@@ -3,6 +3,11 @@ name: 【共用模組】發布環境
 on:
   workflow_call:                                                            # 觸發時機：被其他 Workflow 呼叫
     inputs:                                                                 # 定義傳入的參數
+      job_name:                                                             # 定義傳入的參數
+        description: 'Job 在 UI 上的顯示名稱'                                  # - 參數說明
+        required: true                                                      # - 參數是否必填
+        type: string                                                        # - 參數類型
+        default: 'Build Native CLI'                                         # - 參數預設值
       maven_profiles:                                                       # - 參數名稱
         description: '包版環境 (prod,openai、dev,openai)'                     # - 參數說明
         required: true                                                      # - 參數是否必填
@@ -11,11 +16,6 @@ on:
         description: '輸出檔案名稱 (例如: AI-CLI-Linux-Dev)'                   # - 參數說明
         required: true                                                      # - 參數是否必填
         type: string                                                        # - 參數類型
-      job_name:                                                             # 定義傳入的參數
-        description: 'Job 在 UI 上的顯示名稱'                                  # - 參數說明
-        required: true                                                      # - 參數是否必填
-        type: string                                                        # - 參數類型
-        default: 'Build Native CLI'                                         # - 參數預設值
 
 jobs:                                                                       # 工作流程
   build:                                                                    # Job名稱：build
