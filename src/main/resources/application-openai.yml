@@ -1,0 +1,17 @@
+# ==========================================
+# Spring AI for OpenAI 的設定
+# ==========================================
+spring:
+  ai:
+    openai:
+      base-url: https://models.inference.ai.azure.com # GitHub (Azure) 的模型閘道
+      api-key: ${GITHUB_TOKEN}                        # GitHub PAT，請將金鑰設定在環境變數 GITHUB_TOKEN 中，確保安全性
+      chat:                                           # 新增 Chat 對話功能
+        completions-path: /chat/completions           # - 指定 chat 路徑
+        options:
+          model: gpt-4o                               # 指定模型，例如：gpt-4o、o1-mini、o1-preview
+      embedding:                                      # 新增 Embeddings 向量功能
+        embeddings-path: /embeddings                  # - 指定 Embeddings 路徑
+        options:
+          model: text-embedding-3-small               # - 指定 Embeddings 模型，例如：text-embedding-3-small
+          dimensions: 768                             # - 指定 Embeddings 模型維度

@@ -1,0 +1,18 @@
+# ==========================================
+# Spring AI for Gemini 的設定
+# ==========================================
+spring:
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}           # 請將 chat 金鑰設定在環境變數 GEMINI_API_KEY 中，確保安全性
+        chat:                                # 新增 Chat 對話功能
+          options:
+            model: gemini-3-flash-preview    # - 指定 Chat 模型，例如：gemini-3-flash-preview、gemini-2.5-flash、gemini-3-flash-preview、gemini-3-pro-preview、gemini-3.1-pro-preview
+            temperature: 0.7                 # - 指定 Chat 模型溫度參數 (0.0~1.0)，數值越高回答越具創意
+        embedding:                           # 新增 Embeddings 向量功能
+          api-key: ${GEMINI_API_KEY}         # - 請將 Embeddings 金鑰設定在環境變數 GEMINI_API_KEY 中，確保安全性
+          text:                              # - 指定 Embeddings 為純文字向量模型
+            options:
+              model: gemini-embedding-001    # - 指定 Embeddings 模型，例如：gemini-embedding-001
+              dimensions: 768                # - 指定 Embeddings 模型維度

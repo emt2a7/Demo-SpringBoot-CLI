@@ -31,6 +31,7 @@ public class Main {
     public static void main(String[] args) {
         OffsetDateTime 執行起始時間 = null;
         ApplicationContext context = null;
+
         try {
             執行起始時間 = OffsetDateTime.now();
 
@@ -39,24 +40,6 @@ public class Main {
             app.setWebApplicationType(WebApplicationType.NONE); // 強制設定為非 Web 應用程式，進一步加快啟動速度與降低記憶體消耗
             //app.setLazyInitialization(true); // 開啟全局懶加載 (Lazy Initialization)，只有在你真正 getBean() 時才去建立物件與連線。
             context = app.run(args); // 將 args 原封不動地交給了 Spring 引擎
-
-            //範例_有記憶功能的聊天對話(context);
-
-            範例_將AI回覆對話轉換成結構化輸出(context);
-
-            //範例_上傳PDF到RAG向量資料庫(context);
-
-            //範例_上傳pdf_word_excel_txt到指定的RAG向量資料庫並啟用Tools_解析文字(context);
-
-            //範例_上傳pdf_word_excel_txt到指定的RAG向量資料庫並啟用Tools_解析文字及圖片(context);
-
-            //範例_上傳pdf到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
-
-            //範例_上傳word到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
-
-            //範例_上傳excel到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
-
-
         } catch (Exception e) {
             // 🔴 架構師的 AOT 防禦：絕對不能吞掉 Spring Boot AOT 內部的中斷例外
             if (e.getClass().getName().equals("org.springframework.boot.SpringApplication$AbandonedRunException")) {
@@ -70,7 +53,7 @@ public class Main {
     }
 
     @Bean
-    public ApplicationRunner runSmartTask() {
+    public ApplicationRunner runSmartTask(ApplicationContext context) {
         return (ApplicationArguments args) -> {
             // 自動解析類似 --mode=agent 的參數
             if (args.containsOption("mode")) {
@@ -78,7 +61,27 @@ public class Main {
             }
             // 取得沒有加上 -- 的純文字參數
             log.info("一般參數: {}", args.getNonOptionArgs());
+
+            demo(context, args.getSourceArgs());
         };
+    }
+
+    public static void demo(ApplicationContext context, String[] args) {
+        //範例_有記憶功能的聊天對話(context);
+
+        範例_將AI回覆對話轉換成結構化輸出(context);
+
+        //範例_上傳PDF到RAG向量資料庫(context);
+
+        //範例_上傳pdf_word_excel_txt到指定的RAG向量資料庫並啟用Tools_解析文字(context);
+
+        //範例_上傳pdf_word_excel_txt到指定的RAG向量資料庫並啟用Tools_解析文字及圖片(context);
+
+        //範例_上傳pdf到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
+
+        //範例_上傳word到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
+
+        //範例_上傳excel到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
     }
 
     public static void 範例_有記憶功能的聊天對話(ApplicationContext context) {

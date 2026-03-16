@@ -2,6 +2,7 @@ package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dto.AiResponseWrapper;
 import org.example.dto.StructuredRecord;
 import org.example.service.StructuredService;
 import org.example.util.DateUtil;
@@ -20,7 +21,7 @@ public class StructuredController {
         log.info("run()#START");
 
         OffsetDateTime 執行起始時間 = null;
-        var inputDir = "D:/idea-worksapce/Demo-SpringBoot/doc/測試資料/";
+        AiResponseWrapper<StructuredRecord> response = null;
 
         try {
             執行起始時間 = OffsetDateTime.now();
@@ -38,15 +39,15 @@ public class StructuredController {
                     """;
 
             // 呼叫我們的 Service
-            StructuredRecord profile = service.chat(prompt);
+            response = service.chatWrapper(prompt);
 
             // 印出轉化後的 Java 實體物件
             log.info("🎯 成功取得 Java 物件！");
-            log.info("姓名: {}", profile.fullName());
-            log.info("學歷: {}", profile.highestSchool());
-            log.info("年資: {} 年", profile.yearsOfExperience());
-            log.info("技能: {}", profile.technicalSkills());
-            log.info("HR評價: {}", profile.hrRemark());
+            log.info("姓名: {}", response.data().fullName());
+            log.info("學歷: {}", response.data().highestSchool());
+            log.info("年資: {} 年", response.data().yearsOfExperience());
+            log.info("技能: {}", response.data().technicalSkills());
+            log.info("HR評價: {}", response.data().hrRemark());
             log.info("========== 結構化輸出測試結束 ==========");
         } catch (Exception e) {
             log.error("{}", e.getMessage(), e);
@@ -60,6 +61,8 @@ public class StructuredController {
             log.info(" - StructuredController.run()");
             log.info(" - StructuredController.chat()");
             log.info(" - StructuredRecord.java");
+            log.info("【使用模型】 {}", response.model());
+            log.info("【消耗Token】 {}", response.tokens());
             log.info("【花費時間】 {}", DateUtil.計算相差多少時間(執行起始時間, OffsetDateTime.now()));
             log.info("-------------------------------------------------------------");
             log.info("run()#END");

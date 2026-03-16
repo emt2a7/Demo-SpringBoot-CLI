@@ -8,7 +8,7 @@ spring:
 
   # 對應 XML 中的 <springProfile name="dev"> 或 <springProfile name="prod">
   profiles:
-    active: '@profileActive@' # 讓 Maven 打包時來替換這個值
+    active: '@env.type@,@ai.type@' # 讓 Maven 打包時來替換這個值
 
   # 關閉網頁伺服器，並關閉 Spring 啟動的 ASCII 橫幅 (for MCP Server)
   main:
@@ -25,31 +25,6 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10 # 企業級標準連線池設定
-
-  # ==========================================
-  # Spring AI 相關設定
-  # ==========================================
-  ai:
-    openai:
-      # 🟢 關鍵 1：把原本 OpenAI 的網址，偷天換日改成 GitHub (Azure) 的模型閘道
-      base-url: https://models.inference.ai.azure.com
-      # 🟢 關鍵 2：填入你剛剛申請的 GitHub PAT
-      api-key: ${GITHUB_TOKEN}
-      chat:
-        # 🟢 關鍵修復 1：強制拔除預設的 /v1，直接使用微軟 Azure 的對話路徑
-        completions-path: /chat/completions
-        options:
-          # 🟢 關鍵 3：指定使用 o1-mini 或 o1-preview (這就是你說的 0x 模型)
-          model: gpt-4o
-      # 🟢 2. 新增 OpenAI 的 Embedding 向量設定
-      embedding:
-        # 🟢 關鍵修復 2：強制拔除預設的 /v1，直接使用微軟 Azure 的向量路徑
-        embeddings-path: /embeddings
-        options:
-          # 使用 OpenAI 最新的小巧高精準模型
-          model: text-embedding-3-small
-          # 💡 架構師關鍵設定：強制壓縮成 768 維度，與你現有的資料庫欄位規格保持一致
-          dimensions: 768
 
 # ==========================================
 # Tools 工具組設定
