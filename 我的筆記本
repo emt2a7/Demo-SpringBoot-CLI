@@ -1,0 +1,11 @@
+我現在規劃一套 GitHub 雲端版的小龍蝦，定位為：事件驅動型非同步特工 (Event-Driven Async Agent)
+
+基礎建設完成，包括：github model AI、雲端 postgreSQL (包含 vector store)、RAG (包含文字+pdf+word+excel)、native 執行檔、AI 模型快速切換(application-openai.yml、application-gemini.yml)、金鑰
+
+GitHub Actions (事件驅動與排程) 基礎建設完成，包括：包版部署 dev+prod、手動執行 dev+prod、監聽 issue 觸發 commandline
+
+專案框架：JDK 21、SpringBoot 3.4.3、Spring AI 1.1.0 (大模型與 RAG 整合、包含 vector store)、Spring Boot AOT (Native Image 極速啟動)、commandline
+
+由於專案框架關係，不考慮 MCP Server。
+
+Native Image 啟動只需 0.5 秒的優勢，它非常適合在 GitHub Actions 的短暫生命週期內，執行高密度的運算與知識檢索，並且完全不浪費伺服器閒置成本。
