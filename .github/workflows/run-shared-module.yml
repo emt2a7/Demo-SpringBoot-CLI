@@ -70,7 +70,7 @@ jobs:                                                                       # �
           echo "========================================="
           
           # 執行 Native Image 工具
-          ./${{ inputs.release_pattern }} --mode=agent "${{ inputs.user_prompt }}" > result.txt
+          ./${{ inputs.release_pattern }} --prompt="${{ inputs.user_prompt }}" --telegram_chat_id="${{ inputs.chat_id }}" > result.txt
           
           cat result.txt
           echo "========================================="
