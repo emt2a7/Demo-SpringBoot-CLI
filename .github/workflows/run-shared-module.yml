@@ -3,11 +3,6 @@ name: 【共用模組】執行環境
 on:
   workflow_call:                                                            # 觸發時機：被其他 Workflow 呼叫
     inputs:                                                                 # 傳入參數
-      chat_id:                                                              # 定義傳入的參數
-        description: 'Telegram 聊天室 ID (僅供 Telegram 觸發時回傳用)'          # - 參數說明
-        required: false                                                     # - 參數是否必填
-        type: string                                                        # - 參數類型
-        default: ''                                                         # - 參數預設值 (預設空字串)
       user_prompt:                                                          # 定義傳入的參數
         description: '使用者輸入的提示詞 (Prompt)'                              # - 參數說明
         required: true                                                      # - 參數是否必填
@@ -31,6 +26,11 @@ on:
         required: false                                                     # - 參數是否必填
         type: string                                                        # - 參數類型
         default: '### 🤖 AI 助理的回覆'                                       # - 參數預設值
+      chat_id:                                                              # 定義傳入的參數
+        description: 'Telegram 聊天室 ID (僅供 Telegram 觸發時回傳用)'          # - 參數說明
+        required: false                                                     # - 參數是否必填
+        type: string                                                        # - 參數類型
+        default: ''                                                         # - 參數預設值 (預設空字串)
 
 jobs:                                                                       # 工作流程
   execute:                                                                  # Job名稱：execute

@@ -3,10 +3,16 @@ name: 👷 手動執行「正式」環境
 on:
   workflow_dispatch:
     inputs:
-      user_prompt:
-        description: '請輸入你要讓 AI 執行的指令或問題：'
-        required: true
-        default: '幫我總結 Spring Boot AOT 的優點'
+      user_prompt:                                                          # 定義傳入的參數
+        description: '請輸入你要讓 AI 執行的指令或問題：'                         # - 參數說明
+        required: true                                                      # - 參數是否必填
+        type: string                                                        # - 參數類型
+        default: '幫我總結 Spring Boot AOT 的優點'                             # - 參數預設值
+      chat_id:                                                              # 定義傳入的參數
+        description: 'Telegram 聊天室 ID (僅供 Telegram 觸發時回傳用)'          # - 參數說明
+        required: false                                                     # - 參數是否必填
+        type: string                                                        # - 參數類型
+        default: ''                                                         # - 參數預設值 (預設空字串)
 
 jobs:                                                 # 工作流程
   run-cli:                                            # Job名稱：run-cli
@@ -19,5 +25,6 @@ jobs:                                                 # 工作流程
       user_prompt: ${{ inputs.user_prompt }}          # 輸入參數：提示詞 (Prompt)
       download_type: 'release'                        # 輸入參數：下載來源 (填寫 "artifact" 或 "release")
       release_pattern: 'demo-springboot-cli'          # 輸入參數：「執行檔」的實體檔名 (僅在 download_type 為 release 時有效)
-      summary_title: '### 🤖 AI 助理的回覆 (正式版本)'    # 輸入參數：GitHub Step Summary 顯示的標題
+      summary_title: '### 🤖 AI 助理的回覆 (正式版本)'   # 輸入參數：GitHub Step Summary 顯示的標題
+      chat_id: ${{ inputs.chat_id }}                  # 輸入參數：Telegram 聊天室 ID
     secrets: inherit                                  # 確保共用模組能繼承並使用 GITHUB_TOKEN
