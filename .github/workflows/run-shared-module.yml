@@ -1,4 +1,4 @@
-name: 【共用模組】手動執行
+name: 【共用模組】執行環境
 
 on:
   workflow_call:                                                            # 觸發時機：被其他 Workflow 呼叫
