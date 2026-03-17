@@ -27,6 +27,14 @@ spring:
       maximum-pool-size: 10 # 企業級標準連線池設定
 
 # ==========================================
+# Telegram 設定
+# ==========================================
+telegram:
+  bot-token: ${TELEGRAM_BOT_TOKEN:} # 透過環境變數注入，冒號後面留空代表預設為空字串 (防呆，避免沒設 Token 時啟動報錯)
+  bot-url-root: https://api.telegram.org/bot # Telegram Bot API 的基礎 URL
+  bot-url-send: /sendMessage # Telegram Bot API 的發送訊息路徑
+
+# ==========================================
 # Tools 工具組設定
 # ==========================================
 rag:

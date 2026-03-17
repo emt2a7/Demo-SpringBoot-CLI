@@ -1,8 +1,10 @@
 package org.example;
 
+import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.example.controller.ChatMemoryController;
 import org.example.controller.StructuredController;
+import org.example.controller.TelegramController;
 import org.example.controller.rag.*;
 import org.example.util.DateUtil;
 import org.springframework.boot.*;
@@ -12,6 +14,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 主啟動類別。
@@ -55,14 +59,28 @@ public class Main {
     @Bean
     public ApplicationRunner runSmartTask(ApplicationContext context) {
         return (ApplicationArguments args) -> {
-            // 自動解析類似 --mode=agent 的參數
-            if (args.containsOption("mode")) {
-                log.info("啟動模式: {}", args.getOptionValues("mode"));
-            }
-            // 取得沒有加上 -- 的純文字參數
-            log.info("一般參數: {}", args.getNonOptionArgs());
+            String telegramChatId = "";
+            List<String> prompts = new ArrayList<String>();
 
-            demo(context, args.getSourceArgs());
+            if (args.containsOption("telegram_chat_id")) {
+                telegramChatId =  args.getOptionValues("prompt").getFirst();
+                log.info("Telegram 聊天室ID: {}", telegramChatId);
+            }
+            if (args.containsOption("prompt")) {
+                prompts =  args.getOptionValues("prompt");
+                log.info("提示詞筆數: {}", prompts.size());
+            }
+
+            if (StringUtils.isNotBlank(telegramChatId) && prompts.size() > 0) {
+                telegram(context, telegramChatId, prompts);
+            }
+
+
+
+
+            // 取得沒有加上 -- 的純文字參數
+            //log.info("一般參數: {}", args.getNonOptionArgs());
+            //demo(context, args.getSourceArgs());
         };
     }
 
@@ -82,6 +100,11 @@ public class Main {
         //範例_上傳word到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
 
         //範例_上傳excel到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
+    }
+
+    public static void telegram(ApplicationContext context, String telegramChatId, List<String> prompts) {
+        var controller = context.getBean(TelegramController.class);
+        controller.run(telegramChatId, prompts);
     }
 
     public static void 範例_有記憶功能的聊天對話(ApplicationContext context) {
