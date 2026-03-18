@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.telegram;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

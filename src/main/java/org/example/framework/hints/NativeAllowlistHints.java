@@ -2,6 +2,9 @@ package org.example.framework.hints;
 
 import org.example.Main;
 import org.example.dto.*;
+import org.example.dto.line.LineMessage;
+import org.example.dto.line.LinePushRequest;
+import org.example.dto.telegram.TelegramRequest;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
@@ -48,7 +51,9 @@ public class NativeAllowlistHints implements RuntimeHintsRegistrar {
                 CryptoPriceResponse.class,
                 HelloResponse.class,
                 StructuredRecord.class,
-                TelegramRequest.class
+                TelegramRequest.class,
+                LineMessage.class,
+                LinePushRequest.class
         };
 
         for (Class<?> type : registeredTypes) {

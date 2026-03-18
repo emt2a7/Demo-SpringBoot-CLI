@@ -27,13 +27,23 @@ spring:
       maximum-pool-size: 10 # 企業級標準連線池設定
 
 # ==========================================
+# Line 設定
+# ==========================================
+line:
+  bot:
+    token: ${LINE_BOT_TOKEN:} # 透過環境變數注入，冒號後面留空代表預設為空字串 (防呆，避免沒設 Token 時啟動報錯)
+    api-url: https://api.line.me/v2/bot/message/push # API URL
+    message-limit: 4000 # 單則訊息的字數最大限制為 5000 字，但為了安全起見，這裡設定為 4,000 字以避免超過限制導致發送失敗
+
+# ==========================================
 # Telegram 設定
 # ==========================================
 telegram:
-  bot-token: ${TELEGRAM_BOT_TOKEN:} # 透過環境變數注入，冒號後面留空代表預設為空字串 (防呆，避免沒設 Token 時啟動報錯)
-  bot-url-root: https://api.telegram.org/bot # Telegram Bot API 的基礎 URL
-  bot-url-send: /sendMessage # Telegram Bot API 的發送訊息路徑
-  message-limit: 4000 # Telegram 單則訊息的字數最大限制
+  bot:
+    token: ${TELEGRAM_BOT_TOKEN:} # 透過環境變數注入，冒號後面留空代表預設為空字串 (防呆，避免沒設 Token 時啟動報錯)
+    api-url: https://api.telegram.org/bot # API URL (前半段)
+    send-url: /sendMessage # API URL (後半段)
+    message-limit: 4000 # 單則訊息的字數最大限制
 
 # ==========================================
 # Tools 工具組設定

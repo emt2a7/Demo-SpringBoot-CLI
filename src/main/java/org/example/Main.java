@@ -28,8 +28,14 @@ import java.util.List;
 @ConfigurationPropertiesScan
 public class Main {
 
-    private static String PARAM_CHAT_ID = "telegram_chat_id";
-    private static String PARAM_USER_PROMPT = "prompt";
+    // 平台來源：line、telegram (全小寫)
+    private static String PARAM_SOURCE_PLATFORM = "source_platform";
+
+    // line、telegram 的 ID
+    private static String PARAM_CHAT_ID = "chat_id";
+
+    // 使用者提示詞 (Prompt)
+    private static String PARAM_USER_PROMPT = "user_prompt";
 
     private static String PARAM_TEST_OPENAI = "test_openai";
 
@@ -57,7 +63,7 @@ public class Main {
             }
             log.error("執行發生錯誤: {}", e.getMessage(), e);
         } finally {
-            log.info("【CLI v1.0 總花費時間】 {}", DateUtil.計算相差多少時間(執行起始時間, OffsetDateTime.now()));
+            log.info("【CLI v1.1 總花費時間】 {}", DateUtil.計算相差多少時間(執行起始時間, OffsetDateTime.now()));
             exit(context);
         }
     }
@@ -65,35 +71,34 @@ public class Main {
     @Bean
     public ApplicationRunner runSmartTask(ApplicationContext context) {
         return (ApplicationArguments args) -> {
-            String testOpenAI = "";
-            String telegramChatId = "";
-            List<String> prompts = new ArrayList<String>();
 
-            if (args.containsOption(PARAM_TEST_OPENAI)) {
-                testOpenAI =  args.getOptionValues(PARAM_TEST_OPENAI).getFirst();
-                log.info("傳入參數-單獨測試 OpenAI: {}", testOpenAI);
+            String sourcePlatform = StringUtils.defaultIfBlank(args.getOptionValues(PARAM_SOURCE_PLATFORM).getFirst(), "");
+            String chatId = StringUtils.defaultIfBlank(args.getOptionValues(PARAM_CHAT_ID).getFirst(), "");
+            String userPrompt = StringUtils.defaultIfBlank(args.getOptionValues(PARAM_USER_PROMPT).getFirst(), "");
+            String testOpenAI = StringUtils.defaultIfBlank(args.getOptionValues(PARAM_TEST_OPENAI).getFirst(), "");
 
-                if (StringUtils.equalsIgnoreCase(testOpenAI, "true")) {
-                    test_openai(context);
+            log.info("傳入參數-sourcePlatform (平台來源): {}", sourcePlatform);
+            log.info("傳入參數-chatId (平台ID): {}", chatId);
+            log.info("傳入參數-userPrompt (使用者提示詞): {}", userPrompt);
+            log.info("傳入參數-testOpenAI (測試 openai): {}", testOpenAI);
+
+            if (StringUtils.isNotBlank(testOpenAI) && StringUtils.equalsIgnoreCase(testOpenAI, "true")) {
+                test_openai(context);
+                return;
+            }
+
+            if (StringUtils.isNotBlank(sourcePlatform) && StringUtils.isNotBlank(chatId)) {
+                if (StringUtils.equalsIgnoreCase(sourcePlatform, "line")) {
+                    line(context, chatId, userPrompt);
+                    return;
+                } else if (StringUtils.equalsIgnoreCase(sourcePlatform, "telegram")) {
+                    telegram(context, chatId, userPrompt);
+                    return;
+                } else {
+                    log.warn("不支援的平台來源: {}", sourcePlatform);
                     return;
                 }
             }
-
-            if (args.containsOption(PARAM_CHAT_ID)) {
-                telegramChatId =  args.getOptionValues(PARAM_CHAT_ID).getFirst();
-                log.info("傳入參數-Telegram 聊天室ID: {}", telegramChatId);
-            }
-            if (args.containsOption(PARAM_USER_PROMPT)) {
-                prompts =  args.getOptionValues(PARAM_USER_PROMPT);
-                log.info("傳入參數-提示詞筆數: {}", prompts.size());
-            }
-
-            if (StringUtils.isNotBlank(telegramChatId) && prompts.size() > 0) {
-                telegram(context, telegramChatId, prompts);
-            }
-
-
-
 
             // 取得沒有加上 -- 的純文字參數
             //log.info("一般參數: {}", args.getNonOptionArgs());
@@ -119,9 +124,14 @@ public class Main {
         //範例_上傳excel到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
     }
 
-    public static void telegram(ApplicationContext context, String telegramChatId, List<String> prompts) {
+    public static void line(ApplicationContext context, String chatId, String userPrompt) {
         var controller = context.getBean(TelegramController.class);
-        controller.run(telegramChatId, prompts);
+        controller.run(chatId, userPrompt);
+    }
+
+    public static void telegram(ApplicationContext context, String chatId, String userPrompt) {
+        var controller = context.getBean(TelegramController.class);
+        controller.run(chatId, userPrompt);
     }
 
     public static void 範例_有記憶功能的聊天對話(ApplicationContext context) {

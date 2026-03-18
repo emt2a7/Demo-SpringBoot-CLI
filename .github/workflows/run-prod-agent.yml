@@ -3,16 +3,21 @@ name: 👷 手動執行「正式」環境
 on:
   workflow_dispatch:
     inputs:
+      source_platform:                                                      # 定義傳入的參數
+        description: '平台來源：line、telegram (全小寫)'                        # - 參數說明
+        required: false                                                     # - 參數是否必填
+        type: string                                                        # - 參數類型
+        default: ''                                                         # - 參數預設值 (預設空字串)
+      chat_id:                                                              # 定義傳入的參數
+        description: 'line、telegram 的 ID (5015499247)'                     # - 參數說明
+        required: false                                                     # - 參數是否必填
+        type: string                                                        # - 參數類型
+        default: ''                                                         # - 參數預設值 (預設空字串)
       user_prompt:                                                          # 定義傳入的參數
-        description: '請輸入你要讓 AI 執行的指令或問題：'                         # - 參數說明
+        description: '使用者提示詞 (Prompt)'                                  # - 參數說明
         required: true                                                      # - 參數是否必填
         type: string                                                        # - 參數類型
         default: '明天桃園市天氣溫度如何？'                                      # - 參數預設值
-      chat_id:                                                              # 定義傳入的參數
-        description: 'Telegram 聊天室 ID (僅供 Telegram 觸發時回傳用)'          # - 參數說明
-        required: false                                                     # - 參數是否必填
-        type: string                                                        # - 參數類型
-        default: '5015499247'                                               # - 參數預設值 (預設空字串)
 
 jobs:                                                 # 工作流程
   run-cli:                                            # Job名稱：run-cli
@@ -22,9 +27,10 @@ jobs:                                                 # 工作流程
 
     uses: ./.github/workflows/run-shared-module.yml   # 呼叫共用模組時，路徑必須相對於專案根目錄
     with:
-      user_prompt: ${{ inputs.user_prompt }}          # 輸入參數：提示詞 (Prompt)
+      source_platform: ${{ inputs.source_platform }}  # 輸入參數：平台來源：line、telegram (全小寫)
+      chat_id: ${{ inputs.chat_id }}                  # 輸入參數：line、telegram 的 ID
+      user_prompt: ${{ inputs.user_prompt }}          # 輸入參數：使用者提示詞 (Prompt)
       download_type: 'release'                        # 輸入參數：下載來源 (填寫 "artifact" 或 "release")
       release_pattern: 'demo-springboot-cli'          # 輸入參數：「執行檔」的實體檔名 (僅在 download_type 為 release 時有效)
       summary_title: '### 🤖 AI 助理的回覆 (正式版本)'   # 輸入參數：GitHub Step Summary 顯示的標題
-      chat_id: ${{ inputs.chat_id }}                  # 輸入參數：Telegram 聊天室 ID
     secrets: inherit                                  # 讓「被呼叫端(run-shared-module.yml)」繼承「呼叫端(run-prod-agent.yml)」的所有 secrets

@@ -3,6 +3,7 @@ package org.example.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.AiResponseWrapper;
+import org.example.service.LineService;
 import org.example.service.TelegramService;
 import org.example.util.DateUtil;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,9 @@ import java.time.OffsetDateTime;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class TelegramController {
+public class LineController {
 
-    private final TelegramService service;
+    private final LineService service;
 
     public void run(String chatId, String userPrompt) {
         log.info("run#START");
@@ -32,7 +33,7 @@ public class TelegramController {
             responseWrapper = service.chatWrapper(userPrompt);
             text = responseWrapper.data();
 
-            service.sendToTelegram(chatId, text);
+            service.sendToLine(chatId, text);
         } catch (Exception e) {
             log.error("{}", e.getMessage(), e);
         } finally {
