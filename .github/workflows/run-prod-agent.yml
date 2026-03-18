@@ -7,12 +7,12 @@ on:
         description: '請輸入你要讓 AI 執行的指令或問題：'                         # - 參數說明
         required: true                                                      # - 參數是否必填
         type: string                                                        # - 參數類型
-        default: '幫我總結 Spring Boot AOT 的優點'                             # - 參數預設值
+        default: '明天桃園市天氣溫度如何？'                                      # - 參數預設值
       chat_id:                                                              # 定義傳入的參數
         description: 'Telegram 聊天室 ID (僅供 Telegram 觸發時回傳用)'          # - 參數說明
         required: false                                                     # - 參數是否必填
         type: string                                                        # - 參數類型
-        default: ''                                                         # - 參數預設值 (預設空字串)
+        default: '5015499247'                                               # - 參數預設值 (預設空字串)
 
 jobs:                                                 # 工作流程
   run-cli:                                            # Job名稱：run-cli
