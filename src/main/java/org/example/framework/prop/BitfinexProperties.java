@@ -1,4 +1,4 @@
-package org.example.framework;
+package org.example.framework.prop;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

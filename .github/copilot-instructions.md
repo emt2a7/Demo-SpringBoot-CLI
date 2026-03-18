@@ -103,7 +103,7 @@
 ## 7. 自動化配置類別生成 (Dynamic Properties Class Generation)
 當我要求你「更新 Properties」或「根據 yml 產生配置檔」時，請嚴格執行以下多檔案拆分與轉換邏輯：
 1. **跨檔案讀取與智慧分群 (Grouping)**：
-- 同時掃描 `application.yml`、`application-dev.yml`、`application-prod.yml` 等所有環境設定檔，並將相同 key 的值進行去重與聯集。
+- 同時掃描以 `application` 開頭且 `.yml` 結尾等所有環境設定檔，並將相同 key 的值進行去重與聯集。
 - 略過以 `#` 開頭的註解與空行。
 - 嚴禁轉換 Spring Boot 內建的標準屬性（例如 `spring.*`, `logging.*`, `server.*`），這些請交由框架自動裝配。
 - 根據自定義屬性的「第一層根節點 (Top-level Key)」進行分群（例如以 `bitfinex.*` 為一群、`kiosk.*` 為另一群）。
@@ -111,7 +111,7 @@
 - 針對每一個獨立的根節點，必須分別生成一個獨立的 Java 檔案。
 - **命名規則**：將根節點名稱首字母大寫，並強制加上 `Properties` 後綴。例如：根節點為 `bitfinex`，則產出 `BitfinexProperties.java`；根節點為 `kiosk`，則產出 `KioskProperties.java`。
 3. **套件與原生 Record 宣告 (Package & Record)**：
-- **Package 位置**：第一行必須宣告 `package org.example.framework;`。
+- **Package 位置**：第一行必須宣告 `package org.example.framework.prop;`。
 - **不可變設計**：必須使用 JDK 25 原生的 `record` 語法宣告，嚴禁使用舊版的 `@Value`、`@Getter` 或傳統 `class`。
 - 在 record 上方加上 `@ConfigurationProperties(prefix = "該群組的小寫根節點名稱")`。
 4. **欄位生成與型別推斷 (Field Mapping & Type Inference)**：

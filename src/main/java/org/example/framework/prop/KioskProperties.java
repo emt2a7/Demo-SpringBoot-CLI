@@ -1,4 +1,4 @@
-package org.example.framework;
+package org.example.framework.prop;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -21,6 +21,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "kiosk")
 public record KioskProperties(
+
+    String token,
 
     String root,
 
