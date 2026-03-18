@@ -27,4 +27,4 @@ jobs:                                                 # 工作流程
       release_pattern: 'demo-springboot-cli'          # 輸入參數：「執行檔」的實體檔名 (僅在 download_type 為 release 時有效)
       summary_title: '### 🤖 AI 助理的回覆 (正式版本)'   # 輸入參數：GitHub Step Summary 顯示的標題
       chat_id: ${{ inputs.chat_id }}                  # 輸入參數：Telegram 聊天室 ID
-    secrets: inherit                                  # 確保共用模組能繼承並使用 GITHUB_TOKEN
+    secrets: inherit                                  # 讓「被呼叫端(run-shared-module.yml)」繼承「呼叫端(run-prod-agent.yml)」的所有 secrets
