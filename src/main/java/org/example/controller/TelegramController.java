@@ -25,7 +25,7 @@ public class TelegramController {
     public void run(String telegramChatId, List<String> prompts) {
         log.info("run#START");
         log.info("TELEGRAM_BOT_TOKEN = {}", telegramProperties.botToken());
-        log.info("MY_GITHUB_TOKEN = {}", telegramProperties.testGithubToken());
+        log.info("MY_GITHUB_TOKEN = {}", telegramProperties.messageLimit());
         log.info("bot-url-root = {}", telegramProperties.botUrlRoot());
 
         String text = "";

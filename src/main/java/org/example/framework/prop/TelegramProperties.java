@@ -26,7 +26,7 @@ public record TelegramProperties(
      */
     String botUrlSend,
 
-    String testGithubToken
+    String messageLimit
 
 ) {
 }
