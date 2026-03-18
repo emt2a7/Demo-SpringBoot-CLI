@@ -5,14 +5,7 @@ import org.example.dto.*;
 import org.example.framework.component.ExcelImageExtractor;
 import org.example.framework.component.PdfImageExtractor;
 import org.example.framework.component.WordImageExtractor;
-import org.example.framework.prop.TelegramProperties;
-import org.example.service.ChatMemoryService;
-import org.example.service.CryptoPriceService;
-import org.example.service.GeminiChatService;
-import org.example.service.StructuredService;
 import org.example.service.rag.*;
-import org.example.tool.CryptoPriceTool;
-import org.example.tool.RagTools;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
@@ -50,7 +43,6 @@ public class ApplicationRuntimeHints implements RuntimeHintsRegistrar {
                 ExcelImageExtractor.class,
                 PdfImageExtractor.class,
                 WordImageExtractor.class,
-
 
                 // 主類別（若以 java -jar 啟動時可能被框架反射檢查）
                 Main.class
