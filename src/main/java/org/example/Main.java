@@ -1,7 +1,7 @@
 package org.example;
 
-import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.example.controller.AiChatController;
 import org.example.controller.ChatMemoryController;
 import org.example.controller.StructuredController;
 import org.example.controller.TelegramController;
@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class Main {
 
     private static String PARAM_CHAT_ID = "telegram_chat_id";
     private static String PARAM_USER_PROMPT = "prompt";
+
+    private static String PARAM_TEST_OPENAI = "test_openai";
 
     /**
      * 應用程式主方法。
@@ -62,16 +65,27 @@ public class Main {
     @Bean
     public ApplicationRunner runSmartTask(ApplicationContext context) {
         return (ApplicationArguments args) -> {
+            String testOpenAI = "";
             String telegramChatId = "";
             List<String> prompts = new ArrayList<String>();
 
+            if (args.containsOption(PARAM_TEST_OPENAI)) {
+                testOpenAI =  args.getOptionValues(PARAM_TEST_OPENAI).getFirst();
+                log.info("傳入參數-單獨測試 OpenAI: {}", testOpenAI);
+
+                if (StringUtils.equalsIgnoreCase(testOpenAI, "true")) {
+                    test_openai(context);
+                    return;
+                }
+            }
+
             if (args.containsOption(PARAM_CHAT_ID)) {
                 telegramChatId =  args.getOptionValues(PARAM_CHAT_ID).getFirst();
-                log.info("Telegram 聊天室ID: {}", telegramChatId);
+                log.info("傳入參數-Telegram 聊天室ID: {}", telegramChatId);
             }
             if (args.containsOption(PARAM_USER_PROMPT)) {
                 prompts =  args.getOptionValues(PARAM_USER_PROMPT);
-                log.info("提示詞筆數: {}", prompts.size());
+                log.info("傳入參數-提示詞筆數: {}", prompts.size());
             }
 
             if (StringUtils.isNotBlank(telegramChatId) && prompts.size() > 0) {
@@ -147,6 +161,11 @@ public class Main {
 
     public static void 範例_上傳excel到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(ApplicationContext context) {
         var controller = context.getBean(Rag06Controller.class);
+        controller.run();
+    }
+
+    public static void test_openai(ApplicationContext context) {
+        var controller = context.getBean(AiChatController.class);
         controller.run();
     }
 
