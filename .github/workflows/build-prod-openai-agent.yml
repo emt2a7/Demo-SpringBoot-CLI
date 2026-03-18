@@ -46,7 +46,7 @@ jobs:
           # 使用 || true 來防呆。如果找不到舊 Release，gh 指令會失敗，但 || true 會讓步驟強行顯示成功，不中斷流程。
           # --yes: 跳過確認提示
           # --cleanup-tag: 連同 Git Tag 一起刪除，確保極致乾淨
-          gh release delete "$TARGET_TAG" --yes --cleanup-tag || echo "✅ 找不到舊版 Release，無須刪除，準備發布新版！"
+          gh release delete "$TARGET_TAG" --yes --cleanup-tag -R ${{ github.repository }} || echo "✅ 找不到舊版 Release..."
 
       # --------------------------------------------------------------------------
       - name: 📦 發布到 GitHub Releases (永久保存)                                  # UI 顯示名稱
