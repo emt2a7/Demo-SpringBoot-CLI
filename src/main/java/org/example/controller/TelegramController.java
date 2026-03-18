@@ -3,13 +3,10 @@ package org.example.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.AiResponseWrapper;
-import org.example.framework.prop.KioskProperties;
-import org.example.service.ChatMemoryService;
+import org.example.framework.prop.TelegramProperties;
 import org.example.service.TelegramService;
 import org.example.util.DateUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.client.RestClient;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -22,12 +19,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TelegramController {
 
-    private final KioskProperties kioskProperties;
+    private final TelegramProperties telegramProperties;
     private final TelegramService service;
 
     public void run(String telegramChatId, List<String> prompts) {
         log.info("run#START");
-        log.info("MY_GITHUB_TOKEN = {}", kioskProperties.token());
+        log.info("TELEGRAM_BOT_TOKEN = {}", telegramProperties.botToken());
+        log.info("MY_GITHUB_TOKEN = {}", telegramProperties.testGithubToken());
+        log.info("bot-url-root = {}", telegramProperties.botUrlRoot());
+
         String text = "";
         String prompt = "";
         OffsetDateTime 執行起始時間 = null;

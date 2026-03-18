@@ -1,22 +1,16 @@
 package org.example.framework.hints;
 
 import org.example.Main;
-import org.example.dto.CryptoPriceResponse;
-import org.example.dto.HelloResponse;
-import org.example.framework.prop.BitfinexProperties;
-import org.example.framework.prop.KioskProperties;
+import org.example.dto.*;
 import org.example.framework.component.ExcelImageExtractor;
 import org.example.framework.component.PdfImageExtractor;
 import org.example.framework.component.WordImageExtractor;
+import org.example.framework.prop.TelegramProperties;
 import org.example.service.ChatMemoryService;
 import org.example.service.CryptoPriceService;
 import org.example.service.GeminiChatService;
 import org.example.service.StructuredService;
-import org.example.service.rag.Rag02Service;
-import org.example.service.rag.Rag03Service;
-import org.example.service.rag.Rag04Service;
-import org.example.service.rag.Rag05Service;
-import org.example.service.rag.Rag06Service;
+import org.example.service.rag.*;
 import org.example.tool.CryptoPriceTool;
 import org.example.tool.RagTools;
 import org.springframework.aot.hint.MemberCategory;
@@ -46,32 +40,17 @@ public class ApplicationRuntimeHints implements RuntimeHintsRegistrar {
         // ---------------------------------------------------------------------
         Class<?>[] registeredTypes = new Class<?>[] {
                 // DTOs / Records
-                HelloResponse.class,
+                AiResponseWrapper.class,
                 CryptoPriceResponse.class,
-
-                // Config Properties (record)
-                BitfinexProperties.class,
-                KioskProperties.class,
+                HelloResponse.class,
+                StructuredRecord.class,
+                TelegramRequest.class,
 
                 // Framework Components (會存取檔案、圖片、第三方 lib)
+                ExcelImageExtractor.class,
                 PdfImageExtractor.class,
                 WordImageExtractor.class,
-                ExcelImageExtractor.class,
 
-                // Tools / Services
-                RagTools.class,
-                CryptoPriceTool.class,
-
-                Rag02Service.class,
-                Rag03Service.class,
-                Rag04Service.class,
-                Rag05Service.class,
-                Rag06Service.class,
-
-                ChatMemoryService.class,
-                CryptoPriceService.class,
-                GeminiChatService.class,
-                StructuredService.class,
 
                 // 主類別（若以 java -jar 啟動時可能被框架反射檢查）
                 Main.class
@@ -90,10 +69,9 @@ public class ApplicationRuntimeHints implements RuntimeHintsRegistrar {
         // 2) 資源註冊：logback 與 application yml 是必須的動態資源
         //    (logback-spring.xml 由 Spring 在啟動期間載入並解析，因此顯式註冊)
         // ---------------------------------------------------------------------
-        hints.resources().registerPattern("logback-spring.xml");
         hints.resources().registerPattern("application.yml");
         hints.resources().registerPattern("application-*.yml");
-
+        hints.resources().registerPattern("logback-spring.xml");
         // 建議註冊 doc 與測試資料檔案（若你在 runtime 會以 classpath 方式讀取）
         hints.resources().registerPattern("doc/**");
 

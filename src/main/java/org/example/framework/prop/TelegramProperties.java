@@ -24,7 +24,9 @@ public record TelegramProperties(
     /**
      * Telegram Bot API 的發送訊息路徑
      */
-    String botUrlSend
+    String botUrlSend,
+
+    String testGithubToken
 
 ) {
 }
