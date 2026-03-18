@@ -27,6 +27,9 @@ import java.util.List;
 @ConfigurationPropertiesScan
 public class Main {
 
+    private static String PARAM_CHAT_ID = "telegram_chat_id";
+    private static String PARAM_USER_PROMPT = "prompt";
+
     /**
      * 應用程式主方法。
      *
@@ -62,12 +65,12 @@ public class Main {
             String telegramChatId = "";
             List<String> prompts = new ArrayList<String>();
 
-            if (args.containsOption("telegram_chat_id")) {
-                telegramChatId =  args.getOptionValues("prompt").getFirst();
+            if (args.containsOption(PARAM_CHAT_ID)) {
+                telegramChatId =  args.getOptionValues(PARAM_CHAT_ID).getFirst();
                 log.info("Telegram 聊天室ID: {}", telegramChatId);
             }
-            if (args.containsOption("prompt")) {
-                prompts =  args.getOptionValues("prompt");
+            if (args.containsOption(PARAM_USER_PROMPT)) {
+                prompts =  args.getOptionValues(PARAM_USER_PROMPT);
                 log.info("提示詞筆數: {}", prompts.size());
             }
 
