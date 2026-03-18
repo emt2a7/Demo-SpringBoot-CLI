@@ -36,12 +36,26 @@ jobs:
           path: target/                                                           # 下載保存路徑
 
       # --------------------------------------------------------------------------
+      - name: 🗑️ 刪除舊版 Release 與標籤 (若存在)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}                              # 使用 GitHub 內建的 Token 即可，因為上面已經賦予了 write 權限
+        run: |
+          TARGET_TAG="${{ inputs.version_tag || github.ref_name }}"
+          echo "🔍 準備清理標籤為 [$TARGET_TAG] 的歷史 Release..."
+          
+          # 使用 || true 來防呆。如果找不到舊 Release，gh 指令會失敗，但 || true 會讓步驟強行顯示成功，不中斷流程。
+          # --yes: 跳過確認提示
+          # --cleanup-tag: 連同 Git Tag 一起刪除，確保極致乾淨
+          gh release delete "$TARGET_TAG" --yes --cleanup-tag || echo "✅ 找不到舊版 Release，無須刪除，準備發布新版！"
+
+      # --------------------------------------------------------------------------
       - name: 📦 發布到 GitHub Releases (永久保存)                                  # UI 顯示名稱
         uses: softprops/action-gh-release@v2
         with:
-          files: target/demo-springboot-cli                                      # 要發布的「執行檔」位置
+          files: target/demo-springboot-cli                                      # 要發布至 release 的「執行檔」位置
           tag_name: ${{ inputs.version_tag || github.ref_name }}
           name: Release ${{ inputs.version_tag || github.ref_name }}
           generate_release_notes: true
+          make_latest: true                                                      # 強迫 GitHub 將此版本標記為「最新 (Latest)」
 
       # --------------------------------------------------------------------------

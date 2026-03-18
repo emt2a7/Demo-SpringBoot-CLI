@@ -51,7 +51,7 @@ public class Main {
             }
             log.error("執行發生錯誤: {}", e.getMessage(), e);
         } finally {
-            log.info("【CLI 總花費時間】 {}", DateUtil.計算相差多少時間(執行起始時間, OffsetDateTime.now()));
+            log.info("【CLI v1.0 總花費時間】 {}", DateUtil.計算相差多少時間(執行起始時間, OffsetDateTime.now()));
             exit(context);
         }
     }
