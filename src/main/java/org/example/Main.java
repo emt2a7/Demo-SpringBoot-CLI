@@ -6,6 +6,7 @@ import org.example.controller.ChatMemoryController;
 import org.example.controller.StructuredController;
 import org.example.controller.TelegramController;
 import org.example.controller.rag.*;
+import org.example.framework.hints.NativeAllowlistHints;
 import org.example.util.DateUtil;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +14,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.ImportRuntimeHints;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.List;
 @Slf4j
 @SpringBootApplication
 @ConfigurationPropertiesScan
+@ImportRuntimeHints(NativeAllowlistHints.class)
 public class Main {
 
     // 平台來源：line、telegram (全小寫)
@@ -37,6 +40,7 @@ public class Main {
     // 使用者提示詞 (Prompt)
     private static String PARAM_USER_PROMPT = "user_prompt";
 
+    // 不需要任何傳入參數，直接測試 openai 的對話功能 (test_openai=true)
     private static String PARAM_TEST_OPENAI = "test_openai";
 
     /**

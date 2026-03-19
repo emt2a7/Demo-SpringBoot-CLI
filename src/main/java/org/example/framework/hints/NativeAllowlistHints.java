@@ -57,10 +57,11 @@ public class NativeAllowlistHints implements RuntimeHintsRegistrar {
         };
 
         for (Class<?> type : registeredTypes) {
-            // 賦予這些類別「允許被動態建立 (建構子) 與操作 (方法)」的特權
+            // 允許操作公開的「建構子、方法、屬性欄位」
             hints.reflection().registerType(type,
                     MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS,
-                    MemberCategory.INVOKE_PUBLIC_METHODS);
+                    MemberCategory.INVOKE_PUBLIC_METHODS,
+                    MemberCategory.DECLARED_FIELDS);
         }
 
         /* * ===================================================================

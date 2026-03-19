@@ -77,7 +77,6 @@ public class TelegramService {
                     .chatId(telegramChatId)
                     .text(safeText)
                     .build();
-
             log.info("url:{}", url);
 
             // 使用 RestClient 發送請求

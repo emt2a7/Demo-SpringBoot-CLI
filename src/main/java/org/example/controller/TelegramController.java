@@ -21,8 +21,6 @@ public class TelegramController {
 
     public void run(String chatId, String userPrompt) {
         log.info("run#START");
-
-        String text = "";
         OffsetDateTime 執行起始時間 = null;
         AiResponseWrapper<String> responseWrapper = null;
 
@@ -30,9 +28,7 @@ public class TelegramController {
             執行起始時間 = OffsetDateTime.now();
 
             responseWrapper = service.chatWrapper(userPrompt);
-            text = responseWrapper.data();
-
-            service.sendToTelegram(chatId, text);
+            service.sendToTelegram(chatId, responseWrapper.data());
         } catch (Exception e) {
             log.error("{}", e.getMessage(), e);
         } finally {
