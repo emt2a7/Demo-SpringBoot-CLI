@@ -1,10 +1,7 @@
 package org.example;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.controller.AiChatController;
-import org.example.controller.ChatMemoryController;
-import org.example.controller.StructuredController;
-import org.example.controller.TelegramController;
+import org.example.controller.*;
 import org.example.controller.rag.*;
 import org.example.framework.hints.NativeAllowlistHints;
 import org.example.util.DateUtil;
@@ -91,7 +88,7 @@ public class Main {
                 return;
             }
 
-            if (StringUtils.isNotBlank(sourcePlatform) && StringUtils.isNotBlank(chatId)) {
+            if (StringUtils.isNotBlank(sourcePlatform) && StringUtils.isNotBlank(chatId) && StringUtils.isNotBlank(userPrompt)) {
                 if (StringUtils.equalsIgnoreCase(sourcePlatform, "line")) {
                     line(context, chatId, userPrompt);
                     return;
@@ -129,7 +126,7 @@ public class Main {
     }
 
     public static void line(ApplicationContext context, String chatId, String userPrompt) {
-        var controller = context.getBean(TelegramController.class);
+        var controller = context.getBean(LineController.class);
         controller.run(chatId, userPrompt);
     }
 
@@ -187,7 +184,7 @@ public class Main {
         if (args.containsOption(paramName)) {
             List<String> values = args.getOptionValues(paramName);
             if (values != null && !values.isEmpty()) {
-                return values.get(0); // 取第一個值
+                return StringUtils.trimToEmpty(values.get(0)); // 取第一個值
             }
         }
         return ""; // 預設回傳空字串

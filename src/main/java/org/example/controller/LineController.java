@@ -22,18 +22,13 @@ public class LineController {
 
     public void run(String chatId, String userPrompt) {
         log.info("run#START");
-
-        String text = "";
         OffsetDateTime 執行起始時間 = null;
         AiResponseWrapper<String> responseWrapper = null;
 
         try {
             執行起始時間 = OffsetDateTime.now();
-
             responseWrapper = service.chatWrapper(userPrompt);
-            text = responseWrapper.data();
-
-            service.sendToLine(chatId, text);
+            service.sendToLine(chatId, responseWrapper.data());
         } catch (Exception e) {
             log.error("{}", e.getMessage(), e);
         } finally {
