@@ -72,10 +72,10 @@ public class Main {
     public ApplicationRunner runSmartTask(ApplicationContext context) {
         return (ApplicationArguments args) -> {
 
-            String sourcePlatform = StringUtils.defaultIfBlank(args.getOptionValues(PARAM_SOURCE_PLATFORM).getFirst(), "");
-            String chatId = StringUtils.defaultIfBlank(args.getOptionValues(PARAM_CHAT_ID).getFirst(), "");
-            String userPrompt = StringUtils.defaultIfBlank(args.getOptionValues(PARAM_USER_PROMPT).getFirst(), "");
-            String testOpenAI = StringUtils.defaultIfBlank(args.getOptionValues(PARAM_TEST_OPENAI).getFirst(), "");
+            String sourcePlatform = getSingleArguments(args, PARAM_SOURCE_PLATFORM);
+            String chatId = getSingleArguments(args, PARAM_CHAT_ID);
+            String userPrompt = getSingleArguments(args, PARAM_USER_PROMPT);
+            String testOpenAI = getSingleArguments(args, PARAM_TEST_OPENAI);
 
             log.info("傳入參數-sourcePlatform (平台來源): {}", sourcePlatform);
             log.info("傳入參數-chatId (平台ID): {}", chatId);
@@ -177,6 +177,16 @@ public class Main {
     public static void test_openai(ApplicationContext context) {
         var controller = context.getBean(AiChatController.class);
         controller.run();
+    }
+
+    private static String getSingleArguments(ApplicationArguments args, String paramName) {
+        if (args.containsOption(paramName)) {
+            List<String> values = args.getOptionValues(paramName);
+            if (values != null && !values.isEmpty()) {
+                return values.get(0); // 取第一個值
+            }
+        }
+        return ""; // 預設回傳空字串
     }
 
     /**
