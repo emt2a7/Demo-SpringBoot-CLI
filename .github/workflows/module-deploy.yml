@@ -1,4 +1,4 @@
-name: 【共用】❌執行模組
+name: ❌【共用】執行模組
 
 on:
   workflow_call:                                                            # 觸發時機：被其他 Workflow 呼叫
