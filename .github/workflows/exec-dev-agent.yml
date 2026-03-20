@@ -1,4 +1,4 @@
-name: ✅【更版】開發環境(Dev)
+name: ✅【執行】開發環境(Dev)
 
 on:
   workflow_dispatch:

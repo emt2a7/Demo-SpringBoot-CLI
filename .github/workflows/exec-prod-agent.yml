@@ -1,4 +1,4 @@
-name: ✅【更版】正式環境(Prod)
+name: ✅【執行】正式環境(Prod)
 
 on:
   workflow_dispatch:
