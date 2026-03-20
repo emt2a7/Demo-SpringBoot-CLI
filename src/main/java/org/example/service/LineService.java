@@ -8,6 +8,7 @@ import org.example.dto.line.LineMessage;
 import org.example.dto.line.LinePushRequest;
 import org.example.framework.prop.LineProp;
 import org.example.framework.prop.TelegramProp;
+import org.example.service.tool.GitHubToolService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import javax.sound.sampled.Line;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -25,6 +27,7 @@ public class LineService {
     private final LineProp lineProp;
     private final RestClient.Builder restClient;
     private final AiChatService aiChatService;
+    private final GitHubToolService gitHubToolService;
 
     public AiResponseWrapper<String> chat(String userPrompt) {
         // 系統提示詞
@@ -33,7 +36,12 @@ public class LineService {
         【重要規則】
         請注意你的回答內容請務必精簡，絕對不可超過 %d 個字元，以免超出系統的傳送限制。
         """.formatted(lineProp.messageLimit().intValue());
-        return aiChatService.chat(systemPrompt, userPrompt);
+
+        // 動態組裝 AI 工具清單 (List)
+        List<Object> tools = new ArrayList<>();
+        tools.add(gitHubToolService);
+
+        return aiChatService.chat(systemPrompt, userPrompt.toString(), tools.toArray());
     }
 
     public void sendToLine(String chatId, String text) {

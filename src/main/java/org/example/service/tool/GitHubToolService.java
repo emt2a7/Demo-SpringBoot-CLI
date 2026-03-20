@@ -107,7 +107,7 @@ public class GitHubToolService {
      * @param workflowFileName
      * @return
      */
-    @Tool(description = "觸發/執行「我的 GitHub 帳號」下指定的儲存庫 (Repository) 內的特定工作流程腳本 (*.yml)。當使用者要求『執行某專案的某腳本』、『發布某個專案』或『部署』時，請呼叫此工具。")
+    @Tool(description = "觸發/執行「我的 GitHub 帳號」下指定的儲存庫 (Repository) 內的特定工作流程腳本 (*.yml)。當使用者要求『deploy 某專案的某腳本』、『執行某專案的某腳本』、『發布某個專案』或『部署』時，請呼叫此工具。")
     public String triggerMyWorkflow(
             String repositoryName,
             String workflowFileName // 例如: build-prod.yml

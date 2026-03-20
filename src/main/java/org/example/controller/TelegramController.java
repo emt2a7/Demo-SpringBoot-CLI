@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.AiResponseWrapper;
 import org.example.service.TelegramService;
+import org.example.service.tool.GitHubToolService;
 import org.example.util.DateUtil;
 import org.springframework.stereotype.Controller;
 
@@ -26,7 +27,6 @@ public class TelegramController {
 
         try {
             執行起始時間 = OffsetDateTime.now();
-
             responseWrapper = service.chat(userPrompt);
             service.sendToTelegram(chatId, responseWrapper.data());
         } catch (Exception e) {

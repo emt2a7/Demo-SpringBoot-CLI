@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.AiResponseWrapper;
 import org.example.service.LineService;
 import org.example.service.TelegramService;
+import org.example.service.tool.GitHubToolService;
 import org.example.util.DateUtil;
 import org.springframework.stereotype.Controller;
 

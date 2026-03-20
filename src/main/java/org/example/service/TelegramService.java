@@ -6,11 +6,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.example.dto.AiResponseWrapper;
 import org.example.dto.telegram.TelegramRequest;
 import org.example.framework.prop.TelegramProp;
+import org.example.service.tool.GitHubToolService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -20,6 +24,7 @@ public class TelegramService {
     private final TelegramProp telegramProp;
     private final RestClient.Builder restClient;
     private final AiChatService aiChatService;
+    private final GitHubToolService gitHubToolService;
 
     /**
      * 與 AI 進行對話，並取得回應
@@ -33,7 +38,12 @@ public class TelegramService {
         【重要規則】
         請注意你的回答內容請務必精簡，絕對不可超過 %d 個字元，以免超出系統的傳送限制。
         """.formatted(telegramProp.messageLimit().intValue());
-        return aiChatService.chat(systemPrompt, userPrompt);
+
+        // 動態組裝 AI 工具清單 (List)
+        List<Object> tools = new ArrayList<>();
+        tools.add(gitHubToolService);
+
+        return aiChatService.chat(systemPrompt, userPrompt, tools.toArray());
     }
 
     public void sendToTelegram(String telegramChatId, String text) {
