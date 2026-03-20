@@ -30,7 +30,7 @@
       // 4. 【核心】觸發 GitHub Actions
       // ⚠️ 請確認這裡的帳號與 Repo 名稱是否正確
       const githubRepo = "emt2a7/Demo-SpringBoot-CLI"; 
-      const workflowName = "deploy-prod-agent.yml"; // 你要觸發的 Workflow 檔案名稱
+      const workflowName = "exec-prod-agent.yml"; // 你要觸發的 Workflow 檔案名稱
       
       const ghUrl = `https://api.github.com/repos/${githubRepo}/actions/workflows/${workflowName}/dispatches`;
 

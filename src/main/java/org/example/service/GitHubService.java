@@ -83,7 +83,7 @@ public class GitHubService {
     /**
      * 觸發指定的 Workflow (透過 workflow_dispatch)
      * @param repoName 專案名稱 (例如: Demo-SpringBoot-CLI)
-     * @param workflowId 腳本檔名 (例如: deploy-prod-agent.yml) 或是它的數字 ID
+     * @param workflowId 腳本檔名
      * @param inputs 傳給腳本的參數 (對應 yml 裡面的 inputs)
      */
     public void triggerMyWorkflow(String repoName, String workflowId, Map<String, Object> inputs) {

@@ -11,7 +11,7 @@
       const TELEGRAM_TOKEN = env.TELEGRAM_TOKEN; // Telegram Token
 
       const GITHUB_REPO          = "emt2a7/Demo-SpringBoot-CLI"; // GitHub repo
-      const GITHUB_WORKFLOW_NAME = "deploy-prod-agent.yml"; // GitHub Actions Workflow Name
+      const GITHUB_WORKFLOW_NAME = "exec-prod-agent.yml"; // GitHub Actions Workflow Name
       const GITHUB_URL           = `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${GITHUB_WORKFLOW_NAME}/dispatches`;
       const TELEGRAM_URL         = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
       const LINE_URL             = `https://api.line.me/v2/bot/message/reply`; // LINE Reply API 網址
