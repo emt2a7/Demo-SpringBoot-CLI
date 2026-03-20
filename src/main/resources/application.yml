@@ -48,12 +48,12 @@ telegram:
 # ==========================================
 github:
   username: emt2a7 # 我的 GitHub 帳號
-  god-token: ${TOKEN_GITHUB:} # 萬能金鑰
+  message-limit: 4000 # 單則訊息的字數最大限制
+  god-token: ${TOKEN_GITHUB:} # 萬能金鑰，採用 Fine-grained PAT (細粒度金鑰)
   base-url: https://api.github.com # GitHub API 的 Base URL
   all-repos-uri: /user/repos # 取得使用者所有 Repo 的 URI
-  workflows-uri: /repos/{owner}/{repo}/actions/workflows # 取得特定 Repo 的所有 Workflow 的 URI
-  dispatches-uri: /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches # 觸發 Workflow 的 URI
-  message-limit: 4000 # 單則訊息的字數最大限制
+  workflows-uri: /repos/${github.username}/{repo}/actions/workflows # 取得特定 Repo 的所有 Workflow 的 URI
+  dispatches-uri: /repos/${github.username}/{repo}/actions/workflows/{workflow_id}/dispatches # 觸發 Workflow 的 URI
 
 # ==========================================
 # Tools 工具組設定

@@ -5,11 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.github.GithubRepoDto;
 import org.example.dto.github.GithubWorkflowDto;
 import org.example.service.GitHubService;
-import org.example.util.DateUtil;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 

@@ -14,8 +14,6 @@ public record KioskProp(
 
         String home,
 
-        String root,
-
-        String token
+        String root
 ) {
 }

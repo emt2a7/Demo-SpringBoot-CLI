@@ -40,18 +40,6 @@ public class GitHubService {
     }
 
     /**
-     * 建立共用的 RestClient 產生器 (封裝 BaseUrl 與驗證 Header)
-     */
-    private RestClient getRestClient() {
-        return restClientBuilder
-                .baseUrl(githubProp.baseUrl())
-                .defaultHeader("Accept", "application/vnd.github.v3+json")
-                .defaultHeader("Authorization", "Bearer " + githubProp.godToken())
-                .defaultHeader("X-GitHub-Api-Version", "2022-11-28")
-                .build();
-    }
-
-    /**
      * 查詢我的帳號下所有專案清單
      */
     public List<GithubRepoDto> listAllMyRepo() {
@@ -71,7 +59,7 @@ public class GitHubService {
         log.info("📂 正在讀取專案 [{}] 的所有 Workflows...", repoName);
 
         GithubWorkflowResponse response = getRestClient().get()
-                .uri(githubProp.workflowsUri(), githubProp.username(), repoName)
+                .uri(githubProp.workflowsUri(), repoName)
                 .retrieve()
                 .body(GithubWorkflowResponse.class);
 
@@ -99,7 +87,7 @@ public class GitHubService {
 
         try {
             getRestClient().post()
-                    .uri(githubProp.dispatchesUri(), githubProp.username(), repoName, workflowId)
+                    .uri(githubProp.dispatchesUri(), repoName, workflowId)
                     .body(payload)
                     .retrieve()
                     .toBodilessEntity();
@@ -108,5 +96,24 @@ public class GitHubService {
         } catch (Exception e) {
             log.error("❌ 觸發失敗: {}", e.getMessage(), e);
         }
+    }
+
+    /**
+     * 建立共用的 RestClient 產生器 (封裝 BaseUrl 與驗證 Header)
+     */
+    private RestClient getRestClient() {
+        return getRestClient(githubProp.godToken());
+    }
+
+    /**
+     * 建立共用的 RestClient 產生器 (封裝 BaseUrl 與驗證 Header)
+     */
+    private RestClient getRestClient(String token) {
+        return restClientBuilder
+                .baseUrl(githubProp.baseUrl())
+                .defaultHeader("Accept", "application/vnd.github.v3+json")
+                .defaultHeader("Authorization", "Bearer " + token)
+                .defaultHeader("X-GitHub-Api-Version", "2022-11-28")
+                .build();
     }
 }
