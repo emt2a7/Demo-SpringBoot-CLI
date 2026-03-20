@@ -2,6 +2,7 @@
 .idea/
 *.iml
 Scratches and Consoles/
+token.env
 
 # Maven 建置輸出 (最重要，避免 AI 讀取大量二進位與編譯檔)
 target/
