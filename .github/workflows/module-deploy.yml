@@ -1,91 +1,62 @@
-name: ❌【共用】執行模組
+name: ❌【共用】更版模組
 
 on:
   workflow_call:                                                            # 觸發時機：被其他 Workflow 呼叫
-    inputs:                                                                 # 傳入參數
-      source_platform:                                                      # 定義傳入的參數
-        description: '平台來源：line、telegram (全小寫)'                        # - 參數說明
-        required: false                                                     # - 參數是否必填
-        type: string                                                        # - 參數類型
-        default: ''                                                         # - 參數預設值 (預設空字串)
-      chat_id:                                                              # 定義傳入的參數
-        description: 'line、telegram 的 ID'                                  # - 參數說明
-        required: false                                                     # - 參數是否必填
-        type: string                                                        # - 參數類型
-        default: ''                                                         # - 參數預設值 (預設空字串)
-      user_prompt:                                                          # 定義傳入的參數
-        description: '使用者提示詞 (Prompt)'                                  # - 參數說明
+    inputs:                                                                 # 定義傳入的參數
+      job_name:                                                             # 定義傳入的參數
+        description: 'Job 在 UI 上的顯示名稱'                                  # - 參數說明
         required: true                                                      # - 參數是否必填
         type: string                                                        # - 參數類型
-      download_type:                                                        # 定義傳入的參數
-        description: '下載來源 (填寫 "artifact" 或 "release")'                 # - 參數說明
+        default: 'Build Native CLI'                                         # - 參數預設值
+      maven_profiles:                                                       # - 參數名稱
+        description: '包版環境 (prod,openai、dev,openai)'                     # - 參數說明
         required: true                                                      # - 參數是否必填
         type: string                                                        # - 參數類型
       artifact_name:                                                        # 定義傳入的參數
-        description: 'Artifact 名稱 (僅在 download_type 為 artifact 時有效)'   # - 參數說明
-        required: false                                                     # - 參數是否必填
+        description: '輸出檔案名稱 (例如: AI-CLI-Linux)'                       # - 參數說明
+        required: true                                                      # - 參數是否必填
         type: string                                                        # - 參數類型
-        default: 'AI-CLI-Tool-Linux'                                        # - 參數預設值
-      release_pattern:                                                      # 定義傳入的參數
-        description: 'Release 檔名特徵 (僅在 download_type 為 release 時有效)'  # - 參數說明
-        required: false                                                     # - 參數是否必填
-        type: string                                                        # - 參數類型
-        default: 'Demo-SpringBoot-CLI'                                      # - 參數預設值
-      summary_title:                                                        # 定義傳入的參數
-        description: 'GitHub Step Summary 顯示的標題'                         # - 參數說明
-        required: false                                                     # - 參數是否必填
-        type: string                                                        # - 參數類型
-        default: '### 🤖 AI 助理的回覆'                                       # - 參數預設值
 
 jobs:                                                                       # 工作流程
-  execute:                                                                  # Job名稱：execute
+  build:                                                                    # Job名稱：build
+    name: ${{ inputs.job_name }}                                            # Job 顯示在 UI 的名稱：由傳入參數動態決定
     runs-on: ubuntu-latest                                                  # 執行環境
-
-    permissions:                                                            # 賦予權限
-      actions: read
-      contents: read
-
     steps:                                                                  # 工作步驟
       # --------------------------------------------------------------------
-      # 策略 A：開發環境 -> 從 GitHub Actions Artifact 下載
-      - name: 📥 從最近的編譯紀錄下載 (Artifact 模式)                            # UI 顯示名稱
-        if: ${{ inputs.download_type == 'artifact' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-        run: gh run download -n ${{ inputs.artifact_name }} -R ${{ github.repository }} -D .
+      - name: 📥 下載程式碼                                                   # UI 顯示名稱
+        uses: actions/checkout@v4
 
       # --------------------------------------------------------------------
-      # 策略 B：正式環境 -> 從 GitHub Release 下載
-      - name: 📥 從最新 Release 下載 (Release 模式)                           # UI 顯示名稱
-        if: ${{ inputs.download_type == 'release' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-        run: gh release download --pattern "${{ inputs.release_pattern }}" -R ${{ github.repository }} -D .
+      - name: ☕ 設定 GraalVM JDK                                           # UI 顯示名稱
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.MY_GITHUB_TOKEN }}
 
       # --------------------------------------------------------------------
-      # 共用執行邏輯
-      - name: 🚀 啟動極速 AI CLI 處理你的問題                                   # UI 顯示名稱
-        env:                                                                # 設定環境變數
-          MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}                   # 讀取 GitHub 在 "Actions secrets and variables" 頁面設定的環境變數
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}             # 讀取 GitHub 在 "Actions secrets and variables" 頁面設定的環境變數
-          LINE_BOT_TOKEN: ${{ secrets.LINE_BOT_TOKEN }}                     # 讀取 GitHub 在 "Actions secrets and variables" 頁面設定的環境變數
-        run: |
-          # 賦予 Linux 執行權限
-          chmod +x ${{ inputs.release_pattern }}
-          
-          echo "🗣️ Telegram Chat ID: ${{ inputs.chat_id }}"
-          echo "🗣️ 你的提問: ${{ inputs.user_prompt }}"
-          echo "========================================="
-          
-          # 執行 Native Image 工具
-          ./${{ inputs.release_pattern }} --user_prompt="${{ inputs.user_prompt }}" --source_platform="${{ inputs.source_platform }}" --chat_id="${{ inputs.chat_id }}" > result.txt
-          
-          cat result.txt
-          echo "========================================="
-          
-          # 輸出到 GitHub 摘要面板
-          echo "${{ inputs.summary_title }}" >> $GITHUB_STEP_SUMMARY
-          echo "提問：*${{ inputs.user_prompt }}*" >> $GITHUB_STEP_SUMMARY
-          echo '```text' >> $GITHUB_STEP_SUMMARY
-          cat result.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+      - name: ⚙️ 設定 Maven 快取                                             # UI 顯示名稱
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # --------------------------------------------------------------------
+      - name: 🚀 產出「執行檔」                                               # UI 顯示名稱 (執行 AOT 原生編譯)
+        run: mvn clean -P"${{ inputs.maven_profiles }}" package -DskipTests
+
+      # --------------------------------------------------------------------
+      - name: 🕵️ 列出 target 目錄清單                                         # UI 顯示名稱 (方便日後檢查編譯出來的檔案名稱和大小，確認是否符合預期)
+        run: ls -lh target/
+
+      # --------------------------------------------------------------------
+      - name: 📦 上傳編譯檔案                                                 # UI 顯示名稱
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}                                 # 「執行檔」上傳後的標籤名稱，命名保持唯一不重複
+          path: target/demo-springboot-cli                                  # 「執行檔」上傳前的檔案位置，Linux 環境下編譯出來的原生執行檔「沒有」副檔名，且GraalVM 在 Linux 下產生的二進位檔會強制變成全小寫
+          retention-days: 3                                                 # 「垃圾回收 (Garbage Collection)」機制：每次編譯出來的執行檔，GitHub 只會幫你保留 N 天，時間一到 GitHub 背景機器人就會自動把過期的執行檔徹底刪除，釋放儲存空間。
+
+      # --------------------------------------------------------------------
