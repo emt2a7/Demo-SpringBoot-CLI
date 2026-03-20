@@ -32,7 +32,7 @@ public class LineService {
         你是一個專業的 AI 助理。
         【重要規則】
         請注意你的回答內容請務必精簡，絕對不可超過 %d 個字元，以免超出系統的傳送限制。
-        """.formatted(lineProp);
+        """.formatted(lineProp.messageLimit().intValue());
         return aiChatService.chat(systemPrompt, userPrompt);
     }
 

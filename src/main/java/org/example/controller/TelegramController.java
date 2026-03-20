@@ -30,7 +30,11 @@ public class TelegramController {
             responseWrapper = service.chat(userPrompt);
             service.sendToTelegram(chatId, responseWrapper.data());
         } catch (Exception e) {
-            log.error("{}", e.getMessage(), e);
+            var msg = """
+            ⚠️error⚠️ %s
+            """.formatted(e.getMessage());
+            log.error("{}", msg, e);
+            service.sendToTelegram(chatId, msg);
         } finally {
             log.info("-------------------------------------------------------------");
             log.info("　　　　　　　　　　　　Telegram Bot 執行結果");

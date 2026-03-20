@@ -30,7 +30,11 @@ public class LineController {
             responseWrapper = service.chat(userPrompt);
             service.sendToLine(chatId, responseWrapper.data());
         } catch (Exception e) {
-            log.error("{}", e.getMessage(), e);
+            var msg = """
+            ⚠️error⚠️ %s
+            """.formatted(e.getMessage());
+            log.error("{}", msg, e);
+            service.sendToLine(chatId, msg);
         } finally {
             log.info("-------------------------------------------------------------");
             log.info("　　　　　　　　　　　　Line Bot 執行結果");
