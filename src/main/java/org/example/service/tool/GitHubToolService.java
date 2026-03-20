@@ -41,7 +41,7 @@ public class GitHubToolService {
                 return "目前帳號下沒有找到任何專案。";
             }
 
-            result.append("為您找到以下 ").append(repos.size()).append(" 個專案：\n");
+            result.append("找到 ").append(repos.size()).append(" 個專案：\n");
 
             for (int i = 0; i < repos.size(); i++) {
                 repo = repos.get(i);
@@ -79,17 +79,17 @@ public class GitHubToolService {
             workflows = service.listWorkflowsMyRepo(repositoryName);
 
             if (workflows == null || workflows.isEmpty()) {
-                return "在專案 [" + repositoryName + "] 中沒有找到任何可用的 Workflow 腳本。";
+                return "在專案 " + repositoryName + " 中沒有找到任何可用的 Workflow 腳本。";
             }
 
-            result.append("專案 [").append(repositoryName).append("] 共有 ").append(workflows.size()).append(" 個腳本：\n");
+            result.append("專案 ").append(repositoryName).append(" 共有 ").append(workflows.size()).append(" 個腳本：\n");
 
             for (int i = 0; i < workflows.size(); i++) {
                 wf = workflows.get(i);
                 result.append(i + 1);
                 result.append(".");
                 result.append(wf.name());
-                result.append(" (檔案: ").append(wf.path().replace(".github/workflows/", "")).append(")\n");
+                result.append(" (").append(wf.path().replace(".github/workflows/", "")).append(")\n");
             }
         } catch (Exception e) {
             result.setLength(0);
@@ -118,11 +118,11 @@ public class GitHubToolService {
 
         try {
             service.triggerMyWorkflow(repositoryName, workflowFileName, Map.of());
-            result.append("專案 [");
+            result.append("專案 ");
             result.append(repositoryName);
-            result.append("] 的 [");
+            result.append(" 的 ");
             result.append(workflowFileName);
-            result.append("] 腳本已執行！");
+            result.append(" 腳本已執行！");
         } catch (Exception e) {
             result.setLength(0);
             result.append("❌ 抱歉，在執行 ");
