@@ -11,6 +11,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +76,9 @@ public class GitHubService {
                 .body(GithubWorkflowResponse.class);
 
         if (response != null && response.workflows() != null) {
-            return response.workflows();
+            return response.workflows().stream()
+                    .sorted(Comparator.comparing(GithubWorkflowDto::path)) // 排序
+                    .toList();
         }
         return List.of();
     }
