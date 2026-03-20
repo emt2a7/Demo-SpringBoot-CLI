@@ -32,7 +32,7 @@ jobs:                                                                       # �
         with:
           java-version: '21'
           distribution: 'graalvm'
-          github-token: ${{ secrets.MY_GITHUB_TOKEN }}
+          github-token: ${{ secrets.TOKEN_GITHUB }}
 
       # --------------------------------------------------------------------
       - name: ⚙️ 設定 Maven 快取                                             # UI 顯示名稱

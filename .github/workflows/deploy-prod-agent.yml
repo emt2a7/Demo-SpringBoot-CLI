@@ -38,7 +38,7 @@ jobs:
       # --------------------------------------------------------------------------
       - name: 🗑️ 刪除舊版 Release 與標籤 (若存在)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}                              # 使用 GitHub 內建的 Token 即可，因為上面已經賦予了 write 權限
+          TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}                              # 使用 GitHub 內建的 Token 即可，因為上面已經賦予了 write 權限
         run: |
           TARGET_TAG="${{ inputs.version_tag || github.ref_name }}"
           echo "🔍 準備清理標籤為 [$TARGET_TAG] 的歷史 Release..."

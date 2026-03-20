@@ -18,7 +18,7 @@ jobs:
       - name: 📥 從最新 Release 下載 Linux CLI 執行檔
         # 使用 GitHub 官方 CLI 工具 (gh) 去抓取我們另一個 Workflow 編譯出來的產物
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
         run: |
           # 🟢 加上 -R ${{ github.repository }} 明確指定專案，完美避開 .git 依賴
           gh release download --pattern "Demo-SpringBoot-CLI" -R ${{ github.repository }} -D .

@@ -5,7 +5,7 @@ spring:
   ai:
     openai:
       base-url: https://models.inference.ai.azure.com # GitHub (Azure) 的模型閘道
-      api-key: ${MY_GITHUB_TOKEN}                        # GitHub PAT，請將金鑰設定在環境變數 GITHUB_TOKEN 中，確保安全性
+      api-key: ${TOKEN_GITHUB}                        # GitHub PAT，請將金鑰設定在環境變數 GITHUB_TOKEN 中，確保安全性
       chat:                                           # 新增 Chat 對話功能
         completions-path: /chat/completions           # - 指定 chat 路徑
         options:

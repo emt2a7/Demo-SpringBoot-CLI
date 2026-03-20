@@ -15,7 +15,7 @@ jobs:
       # --------------------------------------------------------------------------
       - name: 🗑️ 刪除前 500 筆 Workflow 紀錄
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
         run: |
           echo "🚨 開始執行刪除舊紀錄..."
           

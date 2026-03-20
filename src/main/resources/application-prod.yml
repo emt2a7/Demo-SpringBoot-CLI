@@ -4,7 +4,6 @@
 # ---------------------------------------------------------------------
 # kiosk 根目錄
 kiosk:
-  token: ${MY_GITHUB_TOKEN}
   root: d:/kiosk3_prod
   home: ${kiosk.root}/kiosk_update_prod
   clear:
