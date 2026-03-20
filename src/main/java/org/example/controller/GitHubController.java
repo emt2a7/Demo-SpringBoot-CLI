@@ -53,20 +53,20 @@ public class GitHubController {
             if (workflows != null && !workflows.isEmpty()) {
                 log.info("列出 {} 底下的所有 Workflows", repoName);
                 for (GithubWorkflowDto workflow : workflows) {
-                    // ID: 246326793, Name: 【✅ AI助理】小龍蝦營業中 (監聽 Issue), State: active, Path: .github/workflows/prod-issue-agent.yml
+                    // ID: 246326793, Name: 【✅ AI助理】小龍蝦營業中 (監聽 Issue), State: active, Path: .github/workflows/monitor-issue-agent.yml
                     // ID: 246718200, Name: 🚀 發布至「開發+OpenAI」環境,          State: active, Path: .github/workflows/build-dev-openai-agent.yml
                     // ID: 246718201, Name: 🚀 發布至「正式+OpenAI」環境,          State: active, Path: .github/workflows/build-prod-openai-agent.yml
-                    // ID: 246753709, Name: 【共用模組】發布環境,                   State: active, Path: .github/workflows/build-shared-module.yml
+                    // ID: 246753709, Name: 【共用模組】發布環境,                   State: active, Path: .github/workflows/module-build.yml
                     // ID: 246869025, Name: 🧹 刪除前 500 筆 workflow 紀錄,       State: active, Path: .github/workflows/delete-workflow-runs-agent.yml
-                    // ID: 246904363, Name: 👷 手動執行「開發」環境,                State: active, Path: .github/workflows/run-dev-agent.yml
-                    // ID: 246904364, Name: 👷 手動執行「正式」環境,                State: active, Path: .github/workflows/run-prod-agent.yml
-                    // ID: 246904365, Name: 【共用模組】執行環境,                   State: active, Path: .github/workflows/run-shared-module.yml
+                    // ID: 246904363, Name: 👷 手動執行「開發」環境,                State: active, Path: .github/workflows/deploy-dev-agent.yml
+                    // ID: 246904364, Name: 👷 手動執行「正式」環境,                State: active, Path: .github/workflows/deploy-prod-agent.yml
+                    // ID: 246904365, Name: 【共用模組】執行環境,                   State: active, Path: .github/workflows/module-deploy.yml
                     log.info("ID: {}, Name: {}, State: {}, Path: {}", workflow.id(), workflow.name(), workflow.state(), workflow.path());
                 }
             }
 
             // 觸發指定的 Workflow
-            workflowId = "run-prod-agent.yml";
+            workflowId = "deploy-prod-agent.yml";
             inputs.put("source_platform", "telegram");
             inputs.put("chat_id", "5015499247");
             inputs.put("user_prompt", "日本首相是誰？");

@@ -1,4 +1,4 @@
-name: 👷 手動執行「正式」環境
+name: 【更版】✅開發環境(Dev)
 
 on:
   workflow_dispatch:
@@ -25,12 +25,12 @@ jobs:                                                 # 工作流程
       actions: read
       contents: read
 
-    uses: ./.github/workflows/run-shared-module.yml   # 呼叫共用模組時，路徑必須相對於專案根目錄
+    uses: ./.github/workflows/module-deploy.yml       # 呼叫共用模組時，路徑必須相對於專案根目錄
     with:
-      source_platform: ${{ inputs.source_platform }}  # 輸入參數：平台來源：line、telegram (全小寫)
-      chat_id: ${{ inputs.chat_id }}                  # 輸入參數：line、telegram 的 ID
-      user_prompt: ${{ inputs.user_prompt }}          # 輸入參數：使用者提示詞 (Prompt)
-      download_type: 'release'                        # 輸入參數：下載來源 (填寫 "artifact" 或 "release")
-      release_pattern: 'demo-springboot-cli'          # 輸入參數：「執行檔」的實體檔名 (僅在 download_type 為 release 時有效)
-      summary_title: '### 🤖 AI 助理的回覆 (正式版本)'   # 輸入參數：GitHub Step Summary 顯示的標題
-    secrets: inherit                                  # 讓「被呼叫端(run-shared-module.yml)」繼承「呼叫端(run-prod-agent.yml)」的所有 secrets
+      user_prompt: ${{ inputs.user_prompt }}          # 輸入參數：提示詞 (Prompt)
+      download_type: 'artifact'                       # 輸入參數：下載來源 (填寫 "artifact" 或 "release")
+      artifact_name: 'Demo-SpringBoot-CLI-Dev'        # 輸入參數：「執行檔」的標籤名稱
+      release_pattern: 'demo-springboot-cli'          # 輸入參數：「執行檔」的實體檔名
+      summary_title: '### 🤖 AI 助理的回覆 (開發版本)'   # 輸入參數：GitHub Step Summary 顯示的標題
+      chat_id: ${{ inputs.chat_id }}                  # 輸入參數：Telegram 聊天室 ID
+    secrets: inherit                                  # 確保共用模組能繼承並使用 GITHUB_TOKEN

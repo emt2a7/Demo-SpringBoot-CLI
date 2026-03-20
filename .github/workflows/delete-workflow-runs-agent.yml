@@ -1,4 +1,4 @@
-name: 🧹 刪除前 500 筆 workflow 紀錄
+name: 【刪除】✅最近500筆workflow紀錄
 
 on:
   #schedule:

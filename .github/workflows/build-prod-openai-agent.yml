@@ -1,4 +1,4 @@
-name: 🚀 發布至「正式+OpenAI」環境
+name: 【執行】✅正式環境(Prod)
 
 on:
   push:                                                                           # 觸發時機：打上 'v' 開頭的版本標籤 (如 v1.0.0) 時
@@ -13,7 +13,7 @@ on:
 
 jobs:
   call-super-build:                                                               # Job名稱：call-super-build
-    uses: ./.github/workflows/build-shared-module.yml                             # 載入共用模組 Workflow 定義檔
+    uses: ./.github/workflows/module-build.yml                                    # 載入共用模組 Workflow 定義檔
     with:                                                                         # 傳入參數
       job_name: "產出執行檔 (正式環境)"                                               # - 參數：Job 顯示在 UI 的名稱
       maven_profiles: "native,prod,openai"                                        # - 參數：包版環境

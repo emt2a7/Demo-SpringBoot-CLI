@@ -1,4 +1,4 @@
-name: 【✅ AI助理】小龍蝦營業中 (監聽 Issue)
+name: 【監聽】❌Issue
 
 # 🟢 觸發條件：當有新的 Issue 被「開啟 (opened)」時
 on:

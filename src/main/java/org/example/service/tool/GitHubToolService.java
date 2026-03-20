@@ -46,7 +46,7 @@ public class GitHubToolService {
             for (int i = 0; i < repos.size(); i++) {
                 repo = repos.get(i);
                 result.append(i + 1);
-                result.append(". ");
+                result.append(".");
                 result.append(repo.name());
 
                 if (repo.isPrivate()) {
@@ -87,7 +87,7 @@ public class GitHubToolService {
             for (int i = 0; i < workflows.size(); i++) {
                 wf = workflows.get(i);
                 result.append(i + 1);
-                result.append(". ");
+                result.append(".");
                 result.append(wf.name());
                 result.append(" (檔案: ").append(wf.path().replace(".github/workflows/", "")).append(")\n");
             }
