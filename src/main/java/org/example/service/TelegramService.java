@@ -1,9 +1,11 @@
 package org.example.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.example.dto.AiResponseWrapper;
 import org.example.dto.telegram.TelegramRequest;
+import org.example.framework.prop.TelegramProp;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,66 +14,34 @@ import org.springframework.web.client.RestClient;
 
 @Slf4j
 @Service
-//@RegisterReflectionForBinding(TelegramRequest.class) // 告訴 GraalVM：請為 StructuredRecord 保留反射能力，讓 Jackson 可以順利反序列化！
+@RequiredArgsConstructor
 public class TelegramService {
 
-    private final String token;
-    private final String apiUrl;
-    private final String sendUrl;
-    private final Integer messageLimit;
-    private final RestClient restClient;
-    private final ChatClient chatClient;
+    private final TelegramProp telegramProp;
+    private final RestClient.Builder restClient;
+    private final AiChatService aiChatService;
 
-    public TelegramService(
-            @Value("${telegram.bot.token:}") String token,
-            @Value("${telegram.bot.api-url:}") String apiUrl,
-            @Value("${telegram.bot.send-url:}") String sendUrl,
-            @Value("${telegram.bot.message-limit:}") Integer messageLimit,
-            RestClient.Builder restClient,
-            ChatClient chatClient) {
-        this.token = token;
-        this.apiUrl = apiUrl;
-        this.sendUrl = sendUrl;
-        this.messageLimit = messageLimit;
-        this.restClient = restClient.build();
-        this.chatClient = chatClient;
-    }
-
-    public AiResponseWrapper<String> chatWrapper(String prompt) {
-        log.info("📄 開始與 AI 對話...");
-
-        // 加入系統提示詞 (System Prompt)，從源頭限制 AI 輸出長度
+    /**
+     * 與 AI 進行對話，並取得回應
+     * @param userPrompt
+     * @return
+     */
+    public AiResponseWrapper<String> chat(String userPrompt) {
+        // 系統提示詞
         String systemPrompt = """
         你是一個專業的 AI 助理。
         【重要規則】
         請注意你的回答內容請務必精簡，絕對不可超過 %d 個字元，以免超出系統的傳送限制。
-        """.formatted(messageLimit);
-
-        ChatResponse response = chatClient.prompt()
-                .system(systemPrompt)
-                .user(prompt)
-                .call()
-                .chatResponse();
-
-        // 萃取系統 Metadata
-        String model = response.getMetadata().getModel();
-        Integer tokens = response.getMetadata().getUsage().getTotalTokens();
-
-        // 解析 AI 回傳的純文字
-        String data = response.getResult().getOutput().getText();
-
-        log.info("✅ 與 AI 對話完成，回覆內容：{}", data);
-
-        // 將資料與 Metadata 包裝在一起回傳
-        return new AiResponseWrapper<>(data, model, tokens);
+        """.formatted(telegramProp.messageLimit().intValue());
+        return aiChatService.chat(systemPrompt, userPrompt);
     }
 
     public void sendToTelegram(String telegramChatId, String text) {
         try {
-            String url = apiUrl + token + sendUrl;
+            String url = telegramProp.apiUrl() + telegramProp.token() + telegramProp.sendUrl();
 
             // 超過 4000 字時，自動在結尾補上 "..."，且總長度保證 <= 4000
-            String safeText = StringUtils.abbreviate(text, messageLimit.intValue());
+            String safeText = StringUtils.abbreviate(text, telegramProp.messageLimit().intValue());
 
             TelegramRequest requestBody = TelegramRequest.builder()
                     .chatId(telegramChatId)
@@ -80,7 +50,7 @@ public class TelegramService {
             log.info("url:{}", url);
 
             // 使用 RestClient 發送請求
-            String reesponse = restClient.post()
+            String reesponse = restClient.build().post()
                     .uri(url)
                     .header("Content-Type", "application/json")
                     // 注意：這裡我用最簡單的字串拼接示範。建議實務上可改用 DTO 物件 (如上一篇提到的 TelegramMessageRequest)

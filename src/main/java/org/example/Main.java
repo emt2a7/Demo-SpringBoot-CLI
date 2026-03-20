@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.controller.*;
 import org.example.controller.rag.*;
 import org.example.framework.hints.NativeAllowlistHints;
+import org.example.service.GitHubService;
 import org.example.util.DateUtil;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.ImportRuntimeHints;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,28 +100,17 @@ public class Main {
                     return;
                 }
             }
-
-            // 取得沒有加上 -- 的純文字參數
-            //log.info("一般參數: {}", args.getNonOptionArgs());
-            //demo(context, args.getSourceArgs());
         };
     }
 
     public static void demo(ApplicationContext context, String[] args) {
         //範例_有記憶功能的聊天對話(context);
-
-        範例_將AI回覆對話轉換成結構化輸出(context);
-
+        //範例_將AI回覆對話轉換成結構化輸出(context);
         //範例_上傳PDF到RAG向量資料庫(context);
-
         //範例_上傳pdf_word_excel_txt到指定的RAG向量資料庫並啟用Tools_解析文字(context);
-
         //範例_上傳pdf_word_excel_txt到指定的RAG向量資料庫並啟用Tools_解析文字及圖片(context);
-
         //範例_上傳pdf到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
-
         //範例_上傳word到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
-
         //範例_上傳excel到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
     }
 
@@ -177,6 +166,11 @@ public class Main {
 
     public static void test_openai(ApplicationContext context) {
         var controller = context.getBean(AiChatController.class);
+        controller.run();
+    }
+
+    public static void test_github(ApplicationContext context) {
+        var controller = context.getBean(GitHubController.class);
         controller.run();
     }
 

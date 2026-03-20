@@ -27,13 +27,13 @@ public class LineController {
 
         try {
             執行起始時間 = OffsetDateTime.now();
-            responseWrapper = service.chatWrapper(userPrompt);
+            responseWrapper = service.chat(userPrompt);
             service.sendToLine(chatId, responseWrapper.data());
         } catch (Exception e) {
             log.error("{}", e.getMessage(), e);
         } finally {
             log.info("-------------------------------------------------------------");
-            log.info("　　　　　　　　　　　　Telegram Bot 執行結果");
+            log.info("　　　　　　　　　　　　Line Bot 執行結果");
             log.info("-------------------------------------------------------------");
             log.info("【傳入參數-聊天室ID】 {}", chatId);
             log.info("【傳入參數-提示詞】 {}", userPrompt);

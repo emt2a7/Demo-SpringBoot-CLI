@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.AiResponseWrapper;
 import org.example.service.AiChatService;
-import org.example.service.TelegramService;
 import org.example.util.DateUtil;
 import org.springframework.stereotype.Controller;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 /**
  * 範例 Controller，示範如何使用 Constructor Injection 與 Lombok。
@@ -29,7 +27,7 @@ public class AiChatController {
         try {
             執行起始時間 = OffsetDateTime.now();
             prompt = "你好，今天天氣如何？";
-            responseWrapper = service.chatWrapper(prompt);
+            responseWrapper = service.chat(prompt);
         } catch (Exception e) {
             log.error("{}", e.getMessage(), e);
         } finally {

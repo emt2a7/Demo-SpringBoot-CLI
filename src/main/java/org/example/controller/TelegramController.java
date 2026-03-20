@@ -27,7 +27,7 @@ public class TelegramController {
         try {
             執行起始時間 = OffsetDateTime.now();
 
-            responseWrapper = service.chatWrapper(userPrompt);
+            responseWrapper = service.chat(userPrompt);
             service.sendToTelegram(chatId, responseWrapper.data());
         } catch (Exception e) {
             log.error("{}", e.getMessage(), e);
