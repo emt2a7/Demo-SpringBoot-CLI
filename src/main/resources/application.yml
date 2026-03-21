@@ -57,6 +57,7 @@ github:
   dispatches-uri: /repos/${github.username}/{repo}/actions/workflows/{workflow_id}/dispatches # 觸發 Workflow 的 URI
   runs-uri: /repos/${github.username}/{repo}/actions/runs # 查詢腳本執行狀態 (Workflow Runs)
   notifications-uri: /notifications # 查詢通知
+  traffic-views-uri: /repos/${github.username}/{repo}/traffic/views # 查詢專案流量
 
 # ==========================================
 # Tools 工具組設定

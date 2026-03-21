@@ -2,10 +2,7 @@ package org.example.service.tool;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.github.GithubNotificationDto;
-import org.example.dto.github.GithubRepoDto;
-import org.example.dto.github.GithubWorkflowDto;
-import org.example.dto.github.GithubWorkflowRunResponse;
+import org.example.dto.github.*;
 import org.example.service.GitHubService;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
@@ -24,6 +21,65 @@ public class GitHubToolService {
     private static final String TAG = "🤖 AI 呼叫了 GitHub 工具：";
 
     private final GitHubService service;
+
+    /**
+     * 查詢專案流量與訪客統計 (Traffic API)
+     * @param repositoryName
+     * @return
+     */
+    @Tool(description = """
+    查詢指定 GitHub 儲存庫 (Repository) 過去 14 天內的流量與訪客統計 (Traffic Views)。
+    當使用者詢問下列情境時，請呼叫此工具：
+    『某專案的流量』
+    『有多少人看過某專案』
+    『某專案的訪客統計』
+    『某專案的熱度』
+    
+    【參數傳遞規則】
+    - repositoryName: (字串) 專案名稱。
+    """)
+    public String getTrafficView(String repositoryName) {
+        log.info("{}getTrafficView，目標專案：{}", TAG, repositoryName);
+
+        GithubTrafficViewsDto traffic = null;
+        StringBuilder result = new StringBuilder();
+        ZoneId taipeiZone = ZoneId.of("Asia/Taipei");
+        // 流量統計通常只看「日期」，所以時間格式可以簡化到 yyyy-MM-dd
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        try {
+            traffic = service.getTrafficView(repositoryName);
+
+            if (traffic == null || traffic.views() == null || traffic.views().isEmpty()) {
+                return "專案 [" + repositoryName + "] 目前沒有足夠的流量數據，或過去 14 天內無人造訪。";
+            }
+
+            result.append("專案 ").append(repositoryName).append(" 的近期流量統計 (近 14 天)：\n");
+            result.append("總瀏覽次數 (Views)：").append(traffic.count()).append(" 次\n");
+            result.append("不重複訪客 (Unique)：").append(traffic.uniques()).append(" 人\n\n");
+            result.append("每日明細 (僅列出有造訪的日期)：\n");
+
+            for (org.example.dto.github.GithubTrafficViewsDto.DailyView view : traffic.views()) {
+                // UTC 時間轉換為台灣日期
+                String twDate = view.timestamp();
+                try {
+                    ZonedDateTime utcDate = ZonedDateTime.parse(view.timestamp());
+                    twDate = utcDate.withZoneSameInstant(taipeiZone).format(formatter);
+                } catch (Exception e) {
+                    log.warn("時間解析失敗: {}", view.timestamp());
+                }
+
+                result.append(twDate).append("：")
+                        .append(view.count()).append(" 次瀏覽 (")
+                        .append(view.uniques()).append(" 人)\n");
+            }
+        } catch (Exception e) {
+            result.setLength(0);
+            result.append("❌ 抱歉，在查詢專案流量時發生錯誤：").append(e.getMessage());
+            log.error("{}", e.getMessage(), e);
+        }
+        return result.toString();
+    }
 
     /**
      * 查詢「我的 GitHub 帳號」下所有專案清單

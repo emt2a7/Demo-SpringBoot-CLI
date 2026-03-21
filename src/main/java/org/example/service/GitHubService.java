@@ -38,6 +38,20 @@ public class GitHubService {
     }
 
     /**
+     * 查詢專案流量與訪客統計 (Traffic Views)
+     * @param repoName 專案名稱
+     */
+    public GithubTrafficViewsDto getTrafficView(String repoName) {
+        log.info("📈 正在查詢專案 [{}] 的流量統計...", repoName);
+
+        return getrestclientclassic().get()
+                // 將 URI 中的 {repo} 替換為實際專案名稱
+                .uri(githubProp.trafficViewsUri(), repoName)
+                .retrieve()
+                .body(org.example.dto.github.GithubTrafficViewsDto.class);
+    }
+
+    /**
      * 查詢我的帳號下所有專案清單
      */
     public List<GithubRepoDto> listAllMyRepo() {
@@ -111,7 +125,7 @@ public class GitHubService {
             uriBuilder.append("&since=").append(since);
         }
 
-        return getRestClientCLassic().get()
+        return getrestclientclassic().get()
                 .uri(uriBuilder.toString())
                 .retrieve()
                 .body(new ParameterizedTypeReference<>() {});
@@ -148,7 +162,7 @@ public class GitHubService {
         return getRestClient(githubProp.godToken());
     }
 
-    private RestClient getRestClientCLassic() {
+    private RestClient getrestclientclassic() {
         return getRestClient(githubProp.classicToken());
     }
 
