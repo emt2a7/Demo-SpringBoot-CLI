@@ -32,7 +32,7 @@ public class GitHubToolService {
     @Tool(description = """
     查詢指定 GitHub 儲存庫 (Repository) 過去 14 天內的流量與訪客統計 (Traffic Views)。
     當使用者詢問下列情境時，請呼叫此工具：
-    『某專案的流量』
+    『某專案流量』
     『有多少人看過某專案』
     『某專案的訪客統計』
     『某專案的熱度』
@@ -152,10 +152,10 @@ public class GitHubToolService {
     @Tool(description = """
     查詢並列出目前「我的 GitHub 帳號」下所有的儲存庫 (Repositories)。
     當使用者詢問下列情境時，請呼叫此工具：
+    『list my repo』
     『我有什麼專案』
     『我的所有專案』
     『列出我的repo』
-    『list my repo』
     『可以發布哪些專案』
     """)
     public String listAllMyRepo() {
@@ -201,8 +201,9 @@ public class GitHubToolService {
     @Tool(description = """
     查詢並列出「我的 GitHub 帳號」下某個 GitHub 儲存庫 (Repository) 內所有的工作流程腳本 (Workflows / Actions)。
     當使用者詢問下列情境時，請呼叫此工具：
-    『某個專案有哪些腳本』
-    『某個專案可以執行什麼動作』
+    『list 某專案 script』
+    『某專案有哪些腳本』
+    『某專案可以執行什麼動作』
     """)
     public String listWorkflowsMyRepo(String repositoryName) {
         log.info("{}listWorkflowsMyRepo，目標專案：{}", TAG, repositoryName);
@@ -306,6 +307,7 @@ public class GitHubToolService {
     @Tool(description = """
     查詢並列出「我的 GitHub 帳號」的通知 (Notifications)。
     當使用者詢問下列情境時，請呼叫此工具：
+    『unread notify』(all=false, since=null, limit=5)
     『有未讀通知嗎』(all=false, since=null, limit=5)
     『本週有消息嗎』(all=false, since=本週, limit=5)
     『有通知嗎』(all=false, since=null, limit=5)
@@ -372,7 +374,7 @@ public class GitHubToolService {
     @Tool(description = """
     觸發/執行「我的 GitHub 帳號」下指定的儲存庫 (Repository) 內的特定工作流程腳本 (*.yml)。
     當使用者要求下列情境時，請呼叫此工具：
-    『deploy 某專案的某腳本』
+    『deploy 某專案 某腳本』
     『執行某專案的某腳本』
     『發布某專案的某腳本』
     """)

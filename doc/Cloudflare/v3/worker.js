@@ -27,6 +27,20 @@
       let lineReplyToken       = "";
 
       // ==========================================
+      // /help 編輯維護區 (日後這區塊比較容易常維護)
+      // ==========================================
+      const helpMsg = `
+【🤖 常用指令】
+- 查詢所有專案：list my repo
+- 查詢專案腳本清單：list <專案> script
+- 更版：deploy <專案> <腳本>
+- 查詢專案執行狀態：<專案> status
+- 查詢 Pull Request：list pr
+- 查詢未讀通知：unread notify
+- 查詢流量與訪客統計：<專案> 流量
+`;
+
+      // ==========================================
       // 🟢 通道 A：處理 LINE 的 Request
       // ==========================================
       if (path === '/line') {
@@ -99,7 +113,6 @@
 
       // 幫助選單指令 (由邊緣節點直接提供說明書)
       if (cleanPrompt.toLowerCase() === '/help' || cleanPrompt.toLowerCase() === '/h') {
-        const helpMsg = "【🤖 使用說明】\n1. 閒聊問答：直接輸入您的問題\n2. 系統操作：輸入「發布至正式+OpenAI」\n3. 系統測試：輸入 /ping";
         return await sendFastReply(helpMsg);
       }
 
