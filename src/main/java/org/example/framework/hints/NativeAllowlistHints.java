@@ -2,9 +2,7 @@ package org.example.framework.hints;
 
 import org.example.Main;
 import org.example.dto.*;
-import org.example.dto.github.GithubRepoDto;
-import org.example.dto.github.GithubWorkflowDto;
-import org.example.dto.github.GithubWorkflowResponse;
+import org.example.dto.github.*;
 import org.example.dto.line.LineMessage;
 import org.example.dto.line.LinePushRequest;
 import org.example.dto.telegram.TelegramRequest;
@@ -60,7 +58,10 @@ public class NativeAllowlistHints implements RuntimeHintsRegistrar {
 
                 GithubRepoDto.class,
                 GithubWorkflowDto.class,
-                GithubWorkflowResponse.class
+                GithubWorkflowResponse.class,
+                GithubWorkflowRunDto.class,
+                GithubWorkflowRunResponse.class,
+                GithubNotificationDto.class
         };
 
         for (Class<?> type : registeredTypes) {

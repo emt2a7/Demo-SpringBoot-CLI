@@ -13,11 +13,17 @@ public record GithubProp(
 
         String baseUrl,
 
+        String classicToken,
+
         String dispatchesUri,
 
         String godToken,
 
         BigDecimal messageLimit,
+
+        String notificationsUri,
+
+        String runsUri,
 
         String username,
 

@@ -50,10 +50,13 @@ github:
   username: emt2a7 # 我的 GitHub 帳號
   message-limit: 4000 # 單則訊息的字數最大限制
   god-token: ${TOKEN_GITHUB:} # 萬能金鑰，採用 Fine-grained PAT (細粒度金鑰)
+  classic-token: ${TOKEN_GITHUB_CLASSIC:} # 傳統金鑰，採用 Classic PAT (傳統金鑰)
   base-url: https://api.github.com # GitHub API 的 Base URL
   all-repos-uri: /user/repos # 取得使用者所有 Repo 的 URI
   workflows-uri: /repos/${github.username}/{repo}/actions/workflows # 取得特定 Repo 的所有 Workflow 的 URI
   dispatches-uri: /repos/${github.username}/{repo}/actions/workflows/{workflow_id}/dispatches # 觸發 Workflow 的 URI
+  runs-uri: /repos/${github.username}/{repo}/actions/runs # 查詢腳本執行狀態 (Workflow Runs)
+  notifications-uri: /notifications # 查詢通知
 
 # ==========================================
 # Tools 工具組設定
