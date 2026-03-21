@@ -25,6 +25,8 @@ public record GithubProp(
 
         String runsUri,
 
+        String searchIssuesUri,
+
         String trafficViewsUri,
 
         String username,

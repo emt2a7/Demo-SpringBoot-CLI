@@ -31,10 +31,32 @@ public class GitHubService {
         // 系統提示詞
         String systemPrompt = """
         你是一個專業的 AI 助理。
+
         【重要規則】
-        請注意你的回答內容請務必精簡，絕對不可超過 %d 個字元，以免超出系統的傳送限制。
+        1. 你的回答內容請務必精簡，絕對不可超過 %d 個字元，以免超出系統的傳送限制。
+        2. 你的回覆將傳送至通訊軟體，請一律使用「純文字 (Plain Text)」回答。
+        3. 絕對禁止在回答中使用任何 Markdown 排版符號（嚴禁出現 **粗體**、*斜體*、`標記` 等符號）。
         """.formatted(githubProp.messageLimit().intValue());
         return aiChatService.chat(systemPrompt, userPrompt);
+    }
+
+    /**
+     * 查詢待我審核的 Pull Request (Search API)
+     */
+    public GithubSearchIssueResponse searchPR() {
+        log.info("🔍 正在查詢 [{}] 待審核的 Pull Request (PR)...", githubProp.username());
+
+        // 組裝 GitHub 搜尋語法 (狀態為 open + 類型是 PR + 被要求 review 的人是自己)
+        String query = "is:open is:pr review-requested:" + githubProp.username();
+
+        return getrestclientclassic().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(githubProp.searchIssuesUri())
+                        .queryParam("q", query)
+                        .queryParam("per_page", 10) // 預設抓最新 10 筆
+                        .build())
+                .retrieve()
+                .body(org.example.dto.github.GithubSearchIssueResponse.class);
     }
 
     /**

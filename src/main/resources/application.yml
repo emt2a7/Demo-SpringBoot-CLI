@@ -58,6 +58,7 @@ github:
   runs-uri: /repos/${github.username}/{repo}/actions/runs # 查詢腳本執行狀態 (Workflow Runs)
   notifications-uri: /notifications # 查詢通知
   traffic-views-uri: /repos/${github.username}/{repo}/traffic/views # 查詢專案流量
+  search-issues-uri: /search/issues # 查詢 Issue/PR
 
 # ==========================================
 # Tools 工具組設定

@@ -3,6 +3,7 @@ package org.example.service.tool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.github.*;
+import org.example.framework.prop.GithubProp;
 import org.example.service.GitHubService;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class GitHubToolService {
 
     private static final String TAG = "🤖 AI 呼叫了 GitHub 工具：";
 
+    private final GithubProp githubProp;
     private final GitHubService service;
 
     /**
@@ -76,6 +78,68 @@ public class GitHubToolService {
         } catch (Exception e) {
             result.setLength(0);
             result.append("❌ 抱歉，在查詢專案流量時發生錯誤：").append(e.getMessage());
+            log.error("{}", e.getMessage(), e);
+        }
+        return result.toString();
+    }
+
+    /**
+     * 查詢待審核的 Pull Request
+     * @return
+     */
+    @Tool(description = """
+    查詢並列出「我的 GitHub 帳號」目前有哪些待審核 (Review Requested) 的 Pull Request (PR)。
+    當使用者詢問下列情境時，請呼叫此工具：
+    『list pr』
+    『有誰找我 review』
+    『待審核的 PR』
+    『等我合併的程式碼』
+    『等我 review 的 PR』
+    『有什麼 PR 需要我看』
+    """)
+    public String listReviewRequestedPRs() {
+        log.info("{}listReviewRequestedPRs", TAG);
+
+        GithubSearchIssueResponse response = null;
+        ZonedDateTime utcDate = null;
+        ZoneId taipeiZone = ZoneId.of("Asia/Taipei");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        StringBuilder result = new StringBuilder();
+
+        try {
+            response = service.searchPR();
+
+            if (response == null || response.items() == null || response.items().isEmpty()) {
+                return "🎉 太棒了！目前沒有任何需要您審核的 Pull Request (收件匣歸零)。";
+            }
+
+            result.append("目前共有 ").append(response.totalCount()).append(" 個待審核的 PR：\n\n");
+
+            for (org.example.dto.github.GithubSearchIssueDto pr : response.items()) {
+                // 從 repository_url (如 https://api.github.com/repos/emt2a7/Demo) 擷取專案名稱
+                String repoName = pr.repositoryUrl() != null ?
+                        pr.repositoryUrl().replace(githubProp.baseUrl() + "/repos/", "") : "未知專案";
+
+                String author = pr.user() != null ? pr.user().login() : "未知作者";
+
+                // UTC 時間轉換為台灣時間
+                String twTime = pr.createdAt();
+                try {
+                    utcDate = ZonedDateTime.parse(pr.createdAt());
+                    twTime = utcDate.withZoneSameInstant(taipeiZone).format(formatter);
+                } catch (Exception e) {
+                    log.warn("時間解析失敗: {}", pr.createdAt());
+                }
+
+                result.append("專案：").append(repoName).append("\n");
+                result.append("標題：").append(pr.title()).append("\n");
+                result.append("發起人：").append(author).append("\n");
+                result.append("發起時間：").append(twTime).append("\n");
+                result.append("詳細網址：").append(pr.htmlUrl()).append("\n\n");
+            }
+        } catch (Exception e) {
+            result.setLength(0);
+            result.append("❌ 抱歉，在查詢待審核的 PR 時發生錯誤：").append(e.getMessage());
             log.error("{}", e.getMessage(), e);
         }
         return result.toString();
