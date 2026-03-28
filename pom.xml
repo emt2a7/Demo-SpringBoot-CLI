@@ -4,65 +4,46 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>demo-springboot-cli</artifactId>
-    <version>1.0</version>
-    <packaging>jar</packaging>
-
+    <!-- 1. Parent 區塊 -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <!-- Maven 不允許在 parent 的 version 使用 property，因此此處使用 literal 以確保可建置；其他依賴維持 properties 管理 -->
         <version>3.4.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <name>Demo-SpringBoot</name>
-    <description>示範用的 Spring Boot 專案（依據專案規範產生之 pom.xml）</description>
+    <!-- 2. Project Metadata -->
+    <groupId>org.example</groupId>
+    <artifactId>demo-springboot-cli</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+    <name>Demo-SpringBoot-CLI</name>
+    <description>首次將 Spring Boot 結合 AI 的範例專案，展示諸多實際應用場景之練習。</description>
 
+    <!-- 2. Properties 區塊 -->
     <properties>
-        <!-- Java / Build -->
         <java.version>21</java.version>
-
-        <!-- Spring Boot / BOM versions (single-truth) -->
-        <spring-boot.version>3.4.3</spring-boot.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-ai-bom.version>1.1.0</spring-ai-bom.version>
-
-        <!-- Tooling / Plugin Versions (single truth) -->
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <spring-boot.version>3.4.3</spring-boot.version>
         <spring-boot-maven-plugin.version>3.4.3</spring-boot-maven-plugin.version>
-
-        <!-- Library versions (single-truth source) -->
-        <!-- Lombok: 最低 1.18.42，與 JDK25 相容 -->
-        <lombok.version>1.18.42</lombok.version>
-
-        <!-- 按專案規範要求的最低版本 -->
         <commons-lang3.version>3.19.0</commons-lang3.version>
         <commons-io.version>2.19.0</commons-io.version>
         <commons-compress.version>1.28.0</commons-compress.version>
-
-        <!-- commons-cli 與 commons-email 版本由 properties 管理，遵循最低版本要求 -->
         <commons-cli.version>1.11.0</commons-cli.version>
-        <commons-email.version>1.6.0</commons-email.version>
-
-        <!-- Test / Surefire -->
+        <lombok.version>1.18.42</lombok.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
-
-        <!-- Encoding -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <!-- Main class for Spring Boot CLI -->
+        <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
         <start-class>org.example.Main</start-class>
-
-        <!-- 包版設定 -->
-        <env.type>dev</env.type>
         <ai.type>openai</ai.type>
+        <env.type>dev</env.type>
     </properties>
 
+    <!-- 3. Dependency Management 區塊 (BOM 管理) -->
     <dependencyManagement>
         <dependencies>
-            <!-- Spring AI BOM: 鎖定至 1.1.0，由 BOM 管理 Spring AI 模組版本 -->
             <dependency>
                 <groupId>org.springframework.ai</groupId>
                 <artifactId>spring-ai-bom</artifactId>
@@ -73,20 +54,12 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- 4. Dependencies 區塊 (核心依賴) -->
     <dependencies>
-        <!-- Spring Boot Starter: 包含核心功能，且由 Spring Boot 管理版本 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- Spring Boot Starter Web: 提供 Web 功能，且由 Spring Boot 管理版本 (原本是移除的，因應使用 open-ai 模組而加入的) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-        <!-- Spring Boot Test (exclude JUnit Vintage) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -98,164 +71,117 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- Lombok (compile-time / IDE annotation processing 已在 plugin 中設定) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-chat-memory</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-vector-store</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-advisors-vector-store</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-pgvector-store</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-tika-document-reader</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-pdf-document-reader</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${commons-compress.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>${commons-cli.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Spring AI Starter: Chat Memory 模組 -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-starter-model-chat-memory</artifactId>
-        </dependency>
-
-        <!-- Spring AI Starter: Vector Store 模組 -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-vector-store</artifactId>
-        </dependency>
-
-        <!-- Spring AI Starter: Advisors Vector Store 模組 -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-advisors-vector-store</artifactId>
-        </dependency>
-
-        <!-- Spring AI Starter: PDF Document Reader 模組 -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-pdf-document-reader</artifactId>
-        </dependency>
-
-        <!-- Spring AI Starter: pgvector 向量資料庫模組 -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-pgvector-store</artifactId>
-        </dependency>
-
-        <!-- Spring AI Starter: Tika Document Reader 模組 (讓 AI 讀懂 Word / Excel / PDF，但不支援 Google 雲端文件) -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-tika-document-reader</artifactId>
-        </dependency>
-
-        <!-- Spring Boot Starter JDBC 與 PostgreSQL Driver，為 pgvector 做準備 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
-        <!-- Spring Boot Starter Mail，提供郵件發送功能，常用於通知或報告生成等場景 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-
-        <!-- PostgreSQL JDBC Driver，pgvector 需要 PostgreSQL 作為向量資料庫，且此處 scope 設為 runtime 因為在開發階段可能使用 H2 或其他資料庫 -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- Apache Commons Lang3 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
-
-        <!-- Apache Commons IO -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
-        </dependency>
-
-        <!-- Apache Commons Compress -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-compress</artifactId>
-            <version>${commons-compress.version}</version>
-        </dependency>
-
-        <!-- Apache Commons CLI -->
-        <dependency>
-            <groupId>commons-cli</groupId>
-            <artifactId>commons-cli</artifactId>
-            <version>${commons-cli.version}</version>
-        </dependency>
-
-        <!-- NOTE: 若需要其他第三方套件，請遵守 properties 中管理版本的單一真理來源原則 -->
-        <!-- NOTE: 若未來需引入 Spring AI 模組 (例如 spring-ai-chat)，請勿在此指定 <version>， BOM（spring-ai-bom 1.1.0）會負責管理版本。 -->
     </dependencies>
 
-    <!-- 雙維度 Profiles: 用於區分開發與生產環境，以及選擇 AI 模組（OpenAI vs Gemini） -->
+    <!-- 5. Profiles 區塊 (環境與功能切換) -->
     <profiles>
         <profile>
             <id>dev</id>
-            <activation><activeByDefault>true</activeByDefault></activation>
-            <properties><env.type>dev</env.type></properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <env.type>dev</env.type>
+            </properties>
         </profile>
         <profile>
             <id>prod</id>
-            <properties><env.type>prod</env.type></properties>
+            <properties>
+                <env.type>prod</env.type>
+            </properties>
         </profile>
-
         <profile>
             <id>openai</id>
-            <activation><activeByDefault>true</activeByDefault></activation>
-            <properties><ai.type>openai</ai.type></properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework.ai</groupId>
-                    <artifactId>spring-ai-starter-model-openai</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>gemini</id>
-            <properties><ai.type>gemini</ai.type></properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework.ai</groupId>
-                    <artifactId>spring-ai-starter-model-google-genai</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework.ai</groupId>
-                    <artifactId>spring-ai-starter-model-google-genai-embedding</artifactId>
-                </dependency>
-            </dependencies>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <ai.type>openai</ai.type>
+            </properties>
         </profile>
     </profiles>
 
+    <!-- 6. Build 區塊 (Plugins 與 Resources) -->
     <build>
-        <!-- 資源過濾設定 -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <excludes>
-                    <exclude>application-*.yml</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
                 <includes>
+                    <include>application.yml</include>
                     <include>application-${env.type}.yml</include>
                     <include>application-${ai.type}.yml</include>
                 </includes>
             </resource>
         </resources>
-
-        <!-- 插件設定 -->
         <plugins>
-            <!-- Compiler plugin: 保留 -parameters 與 -proc:full，並註冊 lombok 作為 annotation processor -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -277,8 +203,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-
-            <!-- Spring Boot plugin: 包含 repackage goal 以產生 Fat Jar -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -291,8 +215,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Surefire plugin: 確保使用 JUnit Platform (JUnit Jupiter) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -301,8 +223,6 @@
                     <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
-
-            <!-- GraalVM Native Image plugin (應用在 GitHub 雲端) -->
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
@@ -316,14 +236,55 @@
                 <executions>
                     <execution>
                         <id>build-native</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>compile-no-fork</goal>
                         </goals>
-                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>1.00</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>
+

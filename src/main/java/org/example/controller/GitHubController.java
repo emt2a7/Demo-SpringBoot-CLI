@@ -53,7 +53,7 @@ public class GitHubController {
             if (workflows != null && !workflows.isEmpty()) {
                 log.info("列出 {} 底下的所有 Workflows", repoName);
                 for (GithubWorkflowDto workflow : workflows) {
-                    // ID: 246326793, Name: 【✅ AI助理】小龍蝦營業中 (監聽 Issue), State: active, Path: .github/workflows/monitor-issue-agent.yml
+                    // ID: 246326793, Name: 【✅ AI助理】小龍蝦營業中 (監聽 Issue), State: active, Path: .github/workflows/listener-issue-agent.yml
                     // ID: 246718200, Name: 🚀 發布至「開發+OpenAI」環境,          State: active, Path: .github/workflows/deploy-dev-openai-agent.yml
                     // ID: 246718201, Name: 🚀 發布至「正式+OpenAI」環境,          State: active, Path: .github/workflows/deploy-prod-openai-agent.yml
                     // ID: 246753709, Name: 【共用模組】發布環境,                   State: active, Path: .github/workflows/module-exec.yml
