@@ -88,6 +88,7 @@ public class Main {
                 return;
             }
 
+            // 目勤支援的平台來源: line、telegram，其他平台未來可再擴充
             if (StringUtils.isNotBlank(sourcePlatform) && StringUtils.isNotBlank(chatId) && StringUtils.isNotBlank(userPrompt)) {
                 if (StringUtils.equalsIgnoreCase(sourcePlatform, "line")) {
                     line(context, chatId, userPrompt);
