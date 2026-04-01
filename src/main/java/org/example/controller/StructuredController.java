@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.AiResponseWrapper;
 import org.example.dto.StructuredRecord;
 import org.example.service.StructuredService;
-import org.example.util.DateUtil;
+import org.example.framework.util.DateUtil;
 import org.springframework.stereotype.Controller;
 
 import java.time.OffsetDateTime;

@@ -1,0 +1,1 @@
+/my-plan-util 請讀取 `specs/001-core-util-date/spec.md`，幫我產出 `specs/001-core-util-date/plan.md`

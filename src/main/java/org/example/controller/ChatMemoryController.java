@@ -3,7 +3,7 @@ package org.example.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.service.ChatMemoryService;
-import org.example.util.DateUtil;
+import org.example.framework.util.DateUtil;
 import org.springframework.stereotype.Controller;
 
 import java.time.OffsetDateTime;

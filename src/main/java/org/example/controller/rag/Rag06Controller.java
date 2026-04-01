@@ -2,9 +2,8 @@ package org.example.controller.rag;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.service.rag.Rag05Service;
 import org.example.service.rag.Rag06Service;
-import org.example.util.DateUtil;
+import org.example.framework.util.DateUtil;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 
