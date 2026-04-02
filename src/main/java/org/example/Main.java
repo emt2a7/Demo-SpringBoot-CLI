@@ -99,18 +99,9 @@ public class Main {
                     return;
                 }
             }
-        };
-    }
 
-    public static void demo(ApplicationContext context, String[] args) {
-        //範例_有記憶功能的聊天對話(context);
-        //範例_將AI回覆對話轉換成結構化輸出(context);
-        //範例_上傳PDF到RAG向量資料庫(context);
-        //範例_上傳pdf_word_excel_txt到指定的RAG向量資料庫並啟用Tools_解析文字(context);
-        //範例_上傳pdf_word_excel_txt到指定的RAG向量資料庫並啟用Tools_解析文字及圖片(context);
-        //範例_上傳pdf到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
-        //範例_上傳word到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
-        //範例_上傳excel到指定的RAG向量資料庫並啟用Tools_解析文字及圖片_解決thought_signature問題(context);
+            test_jpa(context);
+        };
     }
 
     public static void line(ApplicationContext context, String chatId, String userPrompt) {
@@ -170,6 +161,11 @@ public class Main {
 
     public static void test_github(ApplicationContext context) {
         var controller = context.getBean(GitHubController.class);
+        controller.run();
+    }
+
+    public static void test_jpa(ApplicationContext context) {
+        var controller = context.getBean(VectorMainCliController.class);
         controller.run();
     }
 

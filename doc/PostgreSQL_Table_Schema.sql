@@ -1,4 +1,27 @@
 -- ==========================================
+-- 一般資料庫結構設計
+-- ==========================================
+DROP TABLE IF EXISTS auth_user;
+CREATE TABLE auth_user (
+    id UUID     DEFAULT uuid_generate_v4() PRIMARY KEY, -- 使用者 UUID 作為主鍵，確保全球唯一性
+    name        VARCHAR(100),                           -- 文件類別，例如：報告、合約、研究論文等
+    age         integer,                                -- 年齡
+    create_time TIMESTAMP,                              -- 建立時間
+    create_user VARCHAR(100),                           -- 建立人員
+    upload_time TIMESTAMP DEFAULT NOW(),                -- 異動時間
+    upload_user VARCHAR(100)                            -- 異動人員
+);
+
+
+
+
+
+
+
+
+
+
+-- ==========================================
 -- RAG 向量資料庫的 PostgreSQL 結構設計
 -- ==========================================
 -- 確保喚醒兩個必備的擴充套件：向量引擎與 UUID 生成器
