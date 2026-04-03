@@ -100,7 +100,7 @@ public class Main {
                 }
             }
 
-            test_jpa(context);
+            test_jpa_01(context);
         };
     }
 
@@ -164,7 +164,12 @@ public class Main {
         controller.run();
     }
 
-    public static void test_jpa(ApplicationContext context) {
+    public static void test_jpa_01(ApplicationContext context) {
+        var controller = context.getBean(AuthUserCliController.class);
+        controller.runDemo();
+    }
+
+    public static void test_jpa_02(ApplicationContext context) {
         var controller = context.getBean(VectorMainCliController.class);
         controller.run();
     }

@@ -4,12 +4,12 @@
 DROP TABLE IF EXISTS auth_user;
 CREATE TABLE auth_user (
     id UUID     DEFAULT uuid_generate_v4() PRIMARY KEY, -- 使用者 UUID 作為主鍵，確保全球唯一性
-    name        VARCHAR(100),                           -- 文件類別，例如：報告、合約、研究論文等
+    name        VARCHAR(100) UNIQUE,                    -- 姓名 (加上 UNIQUE 確保名稱不重複)
     age         integer,                                -- 年齡
     create_time TIMESTAMP,                              -- 建立時間
     create_user VARCHAR(100),                           -- 建立人員
-    upload_time TIMESTAMP DEFAULT NOW(),                -- 異動時間
-    upload_user VARCHAR(100)                            -- 異動人員
+    update_time TIMESTAMP DEFAULT NOW(),                -- 異動時間
+    update_user VARCHAR(100)                            -- 異動人員
 );
 
 
