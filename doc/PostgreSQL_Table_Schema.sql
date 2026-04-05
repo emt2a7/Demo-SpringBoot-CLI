@@ -8,7 +8,7 @@ CREATE TABLE auth_user (
     age         integer,                                -- 年齡
     create_time TIMESTAMP,                              -- 建立時間
     create_user VARCHAR(100),                           -- 建立人員
-    update_time TIMESTAMP DEFAULT NOW(),                -- 異動時間
+    update_time TIMESTAMP,                              -- 異動時間
     update_user VARCHAR(100)                            -- 異動人員
 );
 

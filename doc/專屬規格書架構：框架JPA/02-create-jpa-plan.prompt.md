@@ -1,0 +1,1 @@
+/my-plan-jpa 請讀取 `specs/101-jpa-auth-user/spec.md`，幫我產出 `specs/101-jpa-auth-user/plan.md`

@@ -10,3 +10,5 @@ mvn clean package -P dev,gemini -DskipTests -U > build-error.log 2>&1
 # 使用 inspector 測試 MCP Server Tools (類似 Postman 功用)
 npx @modelcontextprotocol/inspector java -jar 'D:/idea-worksapce/temp/Demo-SpringBoot-1.0-SNAPSHOT.jar'
 
+# 執行 unit test
+mvn clean test -Dtest=AuthUserRepositoryTest

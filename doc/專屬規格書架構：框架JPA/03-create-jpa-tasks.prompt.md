@@ -1,0 +1,1 @@
+/my-tasks-jpa 請讀取 `specs/101-jpa-auth-user/spec.md` 和 `specs/101-jpa-auth-user/plan.md`，幫我產出 `specs/101-jpa-auth-user/tasks.md`

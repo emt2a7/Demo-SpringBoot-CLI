@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.ImportRuntimeHints;
+import org.springframework.context.annotation.Profile;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -69,6 +70,7 @@ public class Main {
     }
 
     @Bean
+    @Profile("!test") // 🌟 加上這行：測試環境下不要建立這個 Runner
     public ApplicationRunner runSmartTask(ApplicationContext context) {
         return (ApplicationArguments args) -> {
 

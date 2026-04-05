@@ -2,6 +2,7 @@ package org.example.repository;
 
 import org.example.dto.VectorMainMetadata;
 import org.example.entity.VectorMain;
+import org.example.framework.repository.BaseRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
